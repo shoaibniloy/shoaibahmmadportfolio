@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Project</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+
+    <link rel="stylesheet" href="css/aos.css">
+
+    <link rel="stylesheet" href="css/ionicons.min.css">
+    
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+	  
+	  
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light site-navbar-target" id="ftco-navbar">
+      <div class="container">
+          <a class="navbar-brand red-text" href="index.html">Go Back</a>
+          <div class="collapse navbar-collapse" id="ftco-nav">
+          </div>
+      </div>
+    </nav>  
+    <section class="hero-wrap" style="background-image: url('images/rbtarm.png'); background-size: cover; background-position: center; height: 396px; width: 1584px; position: relative;" data-stellar-background-ratio="0.5">
+      <div class="overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.3);"></div>
+      <div class="container" style="max-width: 1584px;">
+          <div class="row no-gutters slider-text align-items-end justify-content-center" style="height: 396px;">
+      </div>
+  </section>
+  
+  <!-- Navbar remains unchanged -->
+<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light site-navbar-target" id="ftco-navbar">
+  <div class="container">
+      <a class="navbar-brand red-text" href="index.html">Go Back</a>
+      <div class="collapse navbar-collapse" id="ftco-nav">
+      </div>
+  </div>
+</nav>
+
+<section class="ftco-section">
+  <div class="container">
+    <div class="row">
+      <!-- Main Content -->
+      <div class="col-lg-8 ftco-animate">
+            <div class="carousel-item active">
+              <img src="images/roboticarm.jpg" class="d-block w-100" alt="Line Follower Robot Image 1">
+              <div class="carousel-caption d-none d-md-block">
+                <h5>Robotic Arm 4DoF Project</h5>
+              </div>
+            </div>
+          </div>
+          <a class="carousel-control-prev" href="#projectCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#projectCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+
+        <h2>Robotic Arm 4DoF Project</h2>
+<h4>Overview:</h4>
+<p>This robotic arm, equipped with three open-loop stepper motors and controlled by an ESP32-based development board, offers precise control and adaptability for a range of tasks. Its design incorporates 3D-printed parts, a customizable grabber, and multiple operating modes, making it suitable for dynamic, on-the-fly applications in various industries.</p>
+
+<h4>Components and Construction:</h4>
+<ul>
+  <li><strong>Stepper Motors</li>
+  <li><strong>3D-Printed Parts</strong></li>
+  <li><strong>ESP32 Development Board</strong></li>
+  <li><strong>Customizable Grabber</strong></li>
+</ul>
+
+<h4>Functionality:</h4>
+<ul>
+  <div class="video-section mb-4">
+    <h5>Supervised Mode</h5>
+    <div class="video-card position-relative">
+        <!-- Embedded YouTube Video -->
+        <div class="video-container">
+            <iframe width="550" height="100%" src="https://www.youtube.com/embed/cZGCJYKRqwc?feature=share" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+  <li><strong>Supervised Mode</strong>: Controlled remotely via a web application hosted on the ESP32. The user can input angles, speeds, and movement sequences, reprogramming the arm for different tasks without coding.</li>
+  <div class="video-section mb-4">
+      <h5>Imitation Mode</h5>
+      <div class="video-card position-relative">
+          <!-- Embedded YouTube Video -->
+          <div class="video-container">
+              <iframe width="550" height="100%" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+      </div>
+  </div>
+  <li><strong>Imitation Mode</strong>: Uses a camera to detect colored objects. The image data is processed by OpenCV, and the coordinates are sent to the Arduino to move the arm to grab the object automatically.</li>
+  <div class="video-section mb-4">
+    <h5>Imitation Mode</h5>
+    <div class="video-card position-relative">
+        <!-- Embedded YouTube Video -->
+        <div class="video-container">
+            <iframe width="550" height="100%" src="https://www.youtube.com/embed/jotFoMm1U3Y" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+  <li><strong>Precise Joystick Control</strong>: A DS4 PlayStation controller connects via Bluetooth for manual control, allowing for real-time adjustments to the arm's position.</li>
+</ul>
+
+<h4>Custom Controller:</h4>
+<ul>
+  <li><strong>Web Application Control</strong>: The ESP32-based system is accessed via a web app, allowing global control of the robotic arm. The app features easy-to-use input forms for angle, speed, and movement sequence settings.</li>
+  <li><strong>Wireless Communication</strong>: Using Bluetooth, the robot can be controlled remotely, enabling flexibility and efficient control without the need for wired connections.</li>
+</ul>
+
+<h4>Achievements:</h4>
+<p>This project highlights cutting-edge technology in robotics, combining custom hardware and software to offer precise control, automation, and flexibility. Its versatile modes and remote capabilities make it a valuable tool for industries requiring dynamic task execution.</p>
+
+
+  
+
+  <!-- loader -->
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.easing.1.3.js"></script>
+  <script src="js/jquery.waypoints.min.js"></script>
+  <script src="js/jquery.stellar.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/aos.js"></script>
+  <script src="js/jquery.animateNumber.min.js"></script>
+  <script src="js/scrollax.min.js"></script>
+  
+  <script src="js/main.js"></script>
+    
+  </body>
+</html>
