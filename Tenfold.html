@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drone Perception and Navigation System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+            background-color: black; /* Set background to black */
+            color: white; /* Set default text color to white */
+        }
+        h1, h2, h3 {
+            color: red; /* Keep headings and subheadings red */
+        }
+        p, ul, ol, li, pre {
+            color: white; /* Ensure all non-heading text is white */
+        }
+        a {
+            color: #ff0000; /* Keep links blue for visibility */
+        }
+        /* Carousel Styles */
+        .carousel {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-item {
+            flex: 0 0 100%;
+            text-align: center;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <header class="bg-blue-600 text-white py-6">
+        <div class="container mx-auto px-4">
+            <a href="index.html" class="text-white hover:underline">Go Back</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Title and Introduction -->
+        <section class="mb-12">
+            <h1 class="text-4xl font-bold">Drone Perception and Navigation System</h1>
+            <h2 class="text-3xl font-semibold mt-4 mb-4">Introduction</h2>
+            <p class="text-lg leading-relaxed">
+                The Drone Perception and Navigation System is an advanced open-source project designed for autonomous robotics research, integrating real-time sensor fusion with a Vision-Language Model (VLM) and a Language Model (LLM) to enable context-aware navigation. Built in Python, the system combines Proximal Policy Optimization (PPO) for stable hovering, Time-of-Flight (ToF) sensors for collision avoidance, and a perception pipeline with YOLO, depth estimation, and VLM, making it ideal for researchers working on autonomous drones, sensor integration, and vision-based navigation.
+            </p>
+            <p class="text-lg leading-relaxed">
+                The project features a modular architecture with a PyQt6 GUI for visualizing camera feeds, 3D maps, and navigation commands, alongside a Flask server for system resource monitoring. It supports real-time decision-making via an LLM, ensuring the drone can navigate dynamically while maintaining safety through a ToF-based protective shield.
+            </p>
+            <p class="text-lg leading-relaxed">
+                Named for its robust and adaptive capabilities, this system aims to push the boundaries of autonomous drone navigation in research settings.
+            </p>
+            <p class="text-lg leading-relaxed">
+                <!-- Embedded YouTube Video -->
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/FY3_QbMFb-A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </p>
+        </section>
+
+        <!-- Project Goals -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-semibold mb-4">Project Goals</h2>
+            <ul class="list-disc pl-6 text-lg">
+                <li>Enable stable autonomous hovering and navigation using PPO and LLM-driven commands.</li>
+                <li>Provide a comprehensive perception system with YOLO, depth estimation, and VLM for real-time environmental awareness.</li>
+                <li>Ensure safety through a ToF-based protective shield, maintaining minimum clearances in all directions.</li>
+                <li>Offer an interactive GUI to visualize camera feeds, 3D maps, sensor data, and navigation decisions.</li>
+                <li>Serve as a foundation for advanced drone research, including reinforcement learning, sensor fusion, and autonomous navigation.</li>
+            </ul>
+        </section>
+
+        <!-- Key Features -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-semibold mb-4">Key Features</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-2xl font-medium mb-2">Autonomous Hovering with PPO</h3>
+                    <ul class="list-disc pl-6 text-lg">
+                        <li>Uses PPO to hover at a reference point (0,0,0), adjusting motor speeds via MAVLink based on IMU feedback.</li>
+                        <li>Continuously learns to minimize drift in six directions using reinforcement learning.</li>
+                        <li>Integrates LLM commands, resuming hovering at new positions after navigation.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-medium mb-2">ToF-Based Protective Shield</h3>
+                    <ul class="list-disc pl-6 text-lg">
+                        <li>Creates a virtual cubic shield (600mm x 600mm x 300mm) using six ToF sensors.</li>
+                        <li>Maintains minimum clearances (300mm horizontal, 150mm vertical) to prevent collisions.</li>
+                        <li>Active at all times, even during LLM-driven navigation.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-medium mb-2">Real-Time Perception Pipeline</h3>
+                    <ul class="list-disc pl-6 text-lg">
+                        <li>YOLO for object detection (e.g., person, car, bicycle).</li>
+                        <li>Depth estimation for distance and spatial awareness.</li>
+                        <li>VLM for contextual scene descriptions, enhancing situational understanding.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-medium mb-2">LLM-Driven Navigation</h3>
+                    <ul class="list-disc pl-6 text-lg">
+                        <li>Central LLM (Qwen3:0.6b) processes YOLO, depth, VLM, ToF, and IMU data to make navigation decisions.</li>
+                        <li>Outputs MAVLink commands to PPO, enabling dynamic movement to new positions.</li>
+                        <li>GUI in <code>llm_subscriber.py</code> displays navigation commands and logs.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-medium mb-2">3D Visualization with Mapping</h3>
+                    <ul class="list-disc pl-6 text-lg">
+                        <li>PyQt6 GUI in <code>yolo3d.py</code> visualizes camera feed, depth map, object detection, bird's eye view, and a 3D plot.</li>
+                        <li>3D plot features loop closing, CPU-based computation, and a 0.1-meter grid for detailed mapping.</li>
+                        <li>Maintains a global map of objects, tracking camera trajectory with drift correction.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Architecture -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-semibold mb-4">Technical Architecture</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                The Drone System is designed for modularity, real-time performance, and ease of integration. It comprises several key components:
+            </p>
+            <ul class="list-disc pl-6 text-lg">
+                <li><strong>CameraFeed Class</strong>: Captures video at 240x180 resolution using OpenCV, streaming frames via ZMQ on port 5556.</li>
+                <li><strong>PPO Control Module</strong>: Manages hovering, drift correction, and shield maintenance, using IMU and ToF data via Bluetooth, and accepts LLM MAVLink commands.</li>
+                <li><strong>Perception Pipeline</strong>: Processes frames with YOLO, depth estimation, and VLM, publishing data on ports 5555 (YOLO/depth) and 5558 (VLM).</li>
+                <li><strong>LLM Module</strong>: In <code>llm_subscriber.py</code>, processes JSON-formatted data (YOLO, depth, VLM, ToF, IMU) to generate MAVLink commands, published on port 5557.</li>
+                <li><strong>3D Visualization</strong>: The <code>Plot3DWidget</code> in <code>yolo3d.py</code> displays a 3D map with loop closing, using a 0.1-meter grid, all computed on the CPU.</li>
+                <li><strong>Main Workflow</strong>: The system integrates sensor data, perception outputs, and LLM commands, with a PyQt6 GUI for visualization and interaction.</li>
+            </ul>
+            <p class="text-lg leading-relaxed mt-4">
+                <strong>Architecture Diagram Description</strong>: The conceptual diagram illustrates the data flow:
+                - CameraFeed streams frames to YOLO, Depth, and VLM scripts.
+                - YOLO and Depth publish detection data on port 5555, VLM on port 5558.
+                - LLM subscribes to perception data, generating MAVLink commands published on port 5557.
+                - PPO receives IMU, ToF, and LLM commands, adjusting motor speeds via MAVLink.
+                - The GUI displays camera feed, 3D plot, and navigation commands, with timers updating at 200ms (3D plot) and 50ms (camera feed).
+                - Arrows indicate data flow: frames to perception scripts, perception data to LLM, commands to PPO, and visualization in the GUI.
+            </p>
+        </section>
+
+        <!-- Setup Instructions -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-semibold mb-4">Setup Instructions</h2>
+            <div class="space-y-4">
+                <h3 class="text-2xl font-medium mb-2">Prerequisites</h3>
+                <ul class="list-disc pl-6 text-lg">
+                    <li><strong>Operating System</strong>: Ubuntu Linux (developed on ASUS ROG Strix G513IE).</li>
+                    <li><strong>Python</strong>: 3.12 or higher.</li>
+                    <li><strong>Hardware</strong>: Drone with camera, IMU, ToF sensors; optional NVIDIA GPU (RTX 3050 Ti).</li>
+                    <li><strong>Software</strong>: Python libraries, xterm, nvidia-smi (Linux).</li>
+                    <li><strong>Network</strong>: Ports 5555-5558 must be available for ZMQ communication.</li>
+                </ul>
+
+                <h3 class="text-2xl font-medium mb-2">Installation Overview</h3>
+                <div class="carousel">
+                    <div class="carousel-inner" id="carouselInner">
+                        <!-- Placeholder Images for Carousel -->
+                        <div class="carousel-item">
+                            <img src="https://via.placeholder.com/600x300.png?text=Step+1:+Clone+Repository" alt="Step 1">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://via.placeholder.com/600x300.png?text=Step+2:+Set+Up+Virtual+Environment" alt="Step 2">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://via.placeholder.com/600x300.png?text=Step+3:+Install+Dependencies" alt="Step 3">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://via.placeholder.com/600x300.png?text=Step+4:+Run+the+Application" alt="Step 4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Research Applications -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-semibold mb-4">Research Applications</h2>
+            <ul class="list-disc pl-6 text-lg">
+                <li><strong>Autonomous Navigation</strong>: Use LLM outputs for high-level navigation decisions in dynamic environments.</li>
+                <li><strong>Object Detection and Mapping</strong>: Leverage YOLO and 3D plotting for real-time object detection and environmental mapping.</li>
+                <li><strong>Safety Systems</strong>: Utilize ToF sensors for collision avoidance in constrained spaces.</li>
+                <li><strong>Reinforcement Learning</strong>: Train PPO algorithms using sensor data for improved hovering and navigation.</li>
+                <li><strong>Sensor Fusion</strong>: Integrate IMU, ToF, and camera data for robust perception and control.</li>
+            </ul>
+        </section>
+
+        <!-- Future Roadmap -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-semibold mb-4">Future Roadmap</h2>
+            <ul class="list-disc pl-6 text-lg">
+                <li><strong>ZMQ Integration for VLM</strong>: Enhance VLM data flow using ZMQ for real-time context awareness.</li>
+                <li><strong>PPO Equation Derivation</strong>: Formulate mathematical equations for PPO to improve hovering control.</li>
+                <li><strong>Cross-Platform Support</strong>: Extend compatibility to other operating systems.</li>
+                <li><strong>Performance Optimization</strong>: Reduce latency in perception and decision-making.</li>
+                <li><strong>Cloud Deployment</strong>: Enable cloud-hosted LLM for scalability.</li>
+            </ul>
+        </section>
+
+        <!-- Skills -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-semibold mb-4">Skills</h2>
+            <ul class="list-disc pl-6 text-lg">
+                <li><strong>Robotics</strong>: Autonomous hovering and navigation using PPO and MAVLink.</li>
+                <li><strong>Computer Vision</strong>: Real-time object detection and depth estimation with YOLO and OpenCV.</li>
+                <li><strong>Deep Learning</strong>: LLM and VLM integration for decision-making and context awareness.</li>
+                <li><strong>GUI Development</strong>: PyQt6 interfaces for visualization and interaction.</li>
+                <li><strong>Sensor Fusion</strong>: Integration of IMU, ToF, and camera data for robust control.</li>
+            </ul>
+        </section>
+
+        <!-- Discussion -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-semibold mb-4">Let's Discuss</h2>
+            <p class="text-lg leading-relaxed">
+                Your thoughts and feedback are welcome! Let's discuss autonomous drones, sensor fusion, and reinforcement learning innovations together. Feel free to share your insights!
+            </p>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2025 Drone Perception Project. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Carousel -->
+    <script>
+        const carouselInner = document.getElementById('carouselInner');
+        const items = carouselInner.getElementsByClassName('carousel-item');
+        let currentIndex = 0;
+
+        function slideCarousel() {
+            currentIndex = (currentIndex + 1) % items.length;
+            carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+
+        // Auto-slide every 3 seconds
+        setInterval(slideCarousel, 3000);
+    </script>
+</body>
+</html>

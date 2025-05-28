@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenitsu V1 Project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000; /* Black background */
+            color: #ffffff; /* White text for all elements */
+        }
+        h1, h2, h3 {
+            color: #ff0000 !important; /* Red for headings and subheadings */
+        }
+        p, li, a, code, pre {
+            color: #ffffff !important; /* White for other text elements */
+        }
+        pre, code {
+            background-color: #1a1a1a; /* Darker background for code blocks */
+            color: #ffffff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 400px;
+            background-color: #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .carousel {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .carousel-images {
+            display: flex;
+            overflow: hidden;
+            width: 100%;
+        }
+        .carousel-images img {
+            width: 100%;
+            flex-shrink: 0;
+            display: none;
+        }
+        .carousel-images img.active {
+            display: block;
+        }
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .carousel-button.prev {
+            left: 10px;
+        }
+        .carousel-button.next {
+            right: 10px;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-black shadow-sm">
+        <div class="container mx-auto px-4 py-4">
+            <a href="index.html" class="text-blue-400 hover:underline text-lg font-semibold">Go Back</a>
+        </div>
+    </div>
+
+    <section class="container mx-auto px-4 py-8">
+        <div class="bg-black rounded-lg shadow-lg p-8">
+            <h1 class="text-4xl font-bold mb-6">Zenitsu V1: Real-Time Robotics Vision-Language-Model(VLM) Integration</h1>
+            
+            <h2 class="text-2xl font-semibold mt-6 mb-4">Introduction</h2>
+            <p class="mb-4">
+                Zenitsu V1 is an innovative open-source project designed for robotics and computer vision research, integrating real-time camera feed processing with a Vision-Language Model (VLM) to enable contextual scene understanding. Built in Python, the system combines robust camera handling, VLM-based scene description, and system resource monitoring into a cohesive framework, making it ideal for researchers and developers working on autonomous navigation, sensor integration, and vision-based robotics applications.
+            </p>
+            <p class="mb-4">
+                The project features a modular architecture with two user interfaces: a feature-rich PyQt6 GUI for an interactive experience and a lightweight OpenCV fallback GUI for resource-constrained environments. A Flask server provides real-time system usage metrics (CPU, RAM, GPU), enhancing the system's utility for performance optimization in research settings.
+            </p>
+            <p class="mb-4">
+                Zenitsu V1 is named after its lightning-fast inference capabilities and agile response to visual inputs, inspired by the dynamic nature of robotics operations.
+            </p>
+            <div class="video-container my-6">
+                <iframe src="https://www.youtube.com/embed/0xlT4Jvr9hE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <p class="italic text-center">Demonstration video of Zenitsu V1 showcasing its capabilities.</p>
+
+            <h2 class="text-2xl font-semibold mt-6 mb-4">Project Goals</h2>
+            <ul class="list-disc list-inside mb-4">
+                <li>Enable real-time scene description for robotics systems using a VLM, facilitating context-aware operations.</li>
+                <li>Provide a user-friendly interface to visualize camera feeds, VLM outputs, and system performance metrics.</li>
+                <li>Offer a flexible framework for researchers to integrate with robotic control systems (e.g., via MAVLink or ROS).</li>
+                <li>Support both high-performance and lightweight environments through dual GUI options.</li>
+                <li>Serve as a foundation for advanced robotics applications, such as autonomous navigation, object detection, and sensor fusion.</li>
+            </ul>
+
+            <h2 class="text-2xl font-semibold mt-6 mb-4">Key Features</h2>
+            <h3 class="text-xl font-semibold mt-4 mb-2">Real-Time Camera Feed Processing</h3>
+            <ul class="list-disc list-inside mb-4">
+                <li>Captures video from a webcam or robotic camera using OpenCV.</li>
+                <li>Supports configurable resolution (default: 240x180) and frame rate (30 FPS).</li>
+                <li>Thread-safe frame capture ensures smooth performance without blocking the main application.</li>
+            </ul>
+            <h3 class="text-xl font-semibold mt-4 mb-2">Vision-Language Model Integration</h3>
+            <ul class="list-disc list-inside mb-4">
+                <li>Interfaces with a VLM (e.g., SmolVLM-500M-Instruct-GGUF) via llama.cpp for scene description.</li>
+                <li>Processes camera frames as base64-encoded JPEG images, sending them to the VLM server with user-defined prompts.</li>
+                <li>Configurable inference intervals (100ms to 2000ms) allow balancing speed and resource usage.</li>
+            </ul>
+            <h3 class="text-xl font-semibold mt-4 mb-2">System Resource Monitoring</h3>
+            <ul class="list-disc list-inside mb-4">
+                <li>A Flask server monitors CPU, RAM, and GPU usage using psutil and nvidia-smi (Linux only).</li>
+                <li>Real-time metrics are displayed in the GUI, aiding performance optimization.</li>
+                <li>Asynchronous data fetching ensures minimal impact on GUI responsiveness.</li>
+            </ul>
+            <h3 class="text-xl font-semibold mt-4 mb-2">Dual GUI Options</h3>
+            <ul class="list-disc list-inside mb-4">
+                <li><strong>PyQt6 GUI</strong>: Modern interface with interactive controls, hover effects, and animations.</li>
+                <li><strong>OpenCV Fallback GUI</strong>: Lightweight alternative with text overlays and keyboard controls.</li>
+            </ul>
+            <h3 class="text-xl font-semibold mt-4 mb-2">Modular and Extensible</h3>
+            <ul class="list-disc list-inside mb-4">
+                <li>Clean, object-oriented design with classes for camera handling, VLM communication, and system monitoring.</li>
+                <li>Easily extensible for additional sensors (e.g., ToF, IMU) or robotic control protocols (e.g., MAVLink, ROS).</li>
+            </ul>
+
+            <h2 class="text-2xl font-semibold mt-6 mb-4">Technical Architecture</h2>
+            <p class="mb-4">
+                Zenitsu V1 is structured to ensure modularity, performance, and ease of integration. The architecture comprises five main components:
+            </p>
+            <ol class="list-decimal list-inside mb-4">
+                <li><strong>CameraFeed Class</strong>: Manages video capture in a dedicated thread using OpenCV's cv2.VideoCapture. It configures resolution (240x180) and FPS (30), ensuring thread-safe frame access via a Lock object.</li>
+                <li><strong>VLMClient Class</strong>: Communicates with the VLM server (llama.cpp) via HTTP POST requests, encoding frames as base64 JPEG images with a compression quality of 80. It implements retries for robust network handling and stores responses thread-safely.</li>
+                <li><strong>System Monitoring</strong>: A Flask server (system_monitor.py) monitors CPU, RAM, and GPU usage using psutil and nvidia-smi, serving data at http://localhost:5000/system-usage. Metrics are fetched asynchronously by a SystemUsageWorker thread.</li>
+                <li><strong>GUI Components</strong>: The PyQt6 GUI (MainWindow) displays camera feed, VLM responses, and system usage with custom widgets (HoverWidget, StartStopButton) and animations. The OpenCV fallback GUI overlays text on frames, controlled via keyboard inputs (s to toggle, q to quit).</li>
+                <li><strong>Main Workflow</strong>: The main() function saves the Flask script, launches VLM and Flask servers in xterm terminals, initializes the camera and VLM client, and starts the selected GUI. It supports command-line arguments for customization.</li>
+            </ol>
+            <p class="mb-4">
+                <strong>Architecture Diagram Description</strong>: The diagram illustrates the data flow:
+                - <strong>CameraFeed</strong> captures frames and sends them to the VLMClient and GUI.
+                - <strong>VLMClient</strong> encodes frames and communicates with the VLM server (http://localhost:8080), receiving scene descriptions.
+                - <strong>Flask Server</strong> provides system metrics (CPU, RAM, GPU) to the GUI via HTTP GET requests.
+                - <strong>GUI</strong> (PyQt6 or OpenCV) displays frames, VLM responses, and metrics, with timers updating at 50ms (camera), 100-2000ms (VLM), and 1000ms (system usage).
+                - Arrows indicate data flow: frames from CameraFeed to VLMClient and GUI, responses from VLM server to GUI, and metrics from Flask to GUI.
+            </p>
+
+            <h2 class="text-2xl font-semibold mt-6 mb-4">Setup Instructions</h2>
+            <h3 class="text-xl font-semibold mt-4 mb-2">Prerequisites</h3>
+            <ul class="list-disc list-inside mb-4">
+                <li><strong>Operating System</strong>: Linux (recommended for GPU support).</li>
+                <li><strong>Python</strong>: 3.8 or higher.</li>
+                <li><strong>Hardware</strong>: Webcam or robotic camera; optional NVIDIA GPU.</li>
+                <li><strong>Software</strong>: Python libraries, llama.cpp, xterm, nvidia-smi (Linux).</li>
+                <li><strong>Network</strong>: Ports 5000 (Flask) and 8080 (VLM) must be available.</li>
+            </ul>
+            <h3 class="text-xl font-semibold mt-4 mb-2">Installation Steps</h3>
+            <ol class="list-decimal list-inside mb-4">
+                <li><strong>Clone the Repository</strong>:
+                    <pre class="p-4 rounded"><code>git clone https://github.com/shoaibniloy/Zenitsu-V1
+cd Zenitsu-V1</code></pre>
+                </li>
+                <li><strong>Set Up a Virtual Environment</strong>:
+                    <pre class="p-4 rounded"><code>python3 -m venv venv
+source venv/bin/activate</code></pre>
+                </li>
+                <li><strong>Install Python Dependencies</strong>:
+                    <pre class="p-4 rounded"><code>pip install -r requirements.txt</code></pre>
+                    Create requirements.txt with:
+                    <pre class="p-4 rounded"><code>opencv-python==4.5.5.64
+requests==2.28.2
+numpy==1.24.3
+Pillow==9.5.0
+PyQt6==6.5.0
+psutil==5.9.5
+flask==2.3.2
+flask-cors==3.0.10</code></pre>
+                </li>
+                <li><strong>Install llama.cpp</strong>:
+                    <pre class="p-4 rounded"><code>git clone https://github.com/ggerganov/llama.cpp.git ~/Drone/YOLO+LLM/llama.cpp
+cd ~/Drone/YOLO+LLM/llama.cpp
+mkdir build && cd build
+cmake .. -DLLAMA_CUDA=ON
+make</code></pre>
+                </li>
+                <li><strong>Download VLM Model</strong>:
+                    <pre class="p-4 rounded"><code>mkdir -p ~/Drone/YOLO+LLM/llama.cpp/models
+# Download model</code></pre>
+                </li>
+                <li><strong>Install System Dependencies</strong>:
+                    <pre class="p-4 rounded"><code>sudo apt update
+sudo apt install xterm nvidia-utils-535</code></pre>
+                </li>
+            </ol>
+
+            <h2 class="text-2xl font-semibold mt-6 mb-4">Usage</h2>
+            <p class="mb-4">Run the application:</p>
+            <pre class="p-4 rounded"><code>python3 justvlm.py</code></pre>
+            <p class="mb-4">Customize with:</p>
+            <pre class="p-4 rounded"><code>python3 justvlm.py --vlm-endpoint <url> --fallback --camera-device <index> --instruction <text> --inference-interval <ms></code></pre>
+            <p class="mb-4">Example:</p>
+            <pre class="p-4 rounded"><code>python3 justvlm.py --fallback --inference-interval 1000 --instruction "Identify objects in the scene"</code></pre>
+
+            <h2 class="text-2xl font-semibold mt-6 mb-4">Research Applications</h2>
+            <ul class="list-disc list-inside mb-4">
+                <li><strong>Autonomous Navigation</strong>: Use VLM outputs for high-level decision-making in robotic systems.</li>
+                <li><strong>Object Detection</strong>: Extend with YOLO for specific object recognition.</li>
+                <li><strong>Safety Systems</strong>: Integrate ToF and IMU sensors for collision avoidance.</li>
+                <li><strong>Reinforcement Learning</strong>: Train algorithms using VLM and sensor data for robust control.</li>
+            </ul>
+
+            <h2 class="text-2xl font-semibold mt-6 mb-4">Future Roadmap</h2>
+            <ul class="list-disc list-inside mb-4">
+                <li>Sensor Integration: Add ToF and IMU support.</li>
+                <li>Control Protocol Support: Implement MAVLink or ROS for robotic control.</li>
+                <li>YOLO Integration: Add real-time object detection.</li>
+                <li>Cross-Platform Support: Enhance compatibility.</li>
+                <li>Performance Optimization: Reduce latency.</li>
+                <li>Cloud Deployment: Enable cloud-hosted VLM.</li>
+            </ul>
+
+            <h2 class="text-2xl font-semibold mt-6 mb-4">Skills</h2>
+            <ul class="list-disc list-inside mb-4">
+                <li><strong>Computer Vision</strong>: Real-time camera feed processing with OpenCV.</li>
+                <li><strong>Deep Learning</strong>: VLM integration for scene understanding.</li>
+                <li><strong>System Monitoring</strong>: Flask-based resource tracking.</li>
+                <li><strong>GUI Development</strong>: PyQt6 and OpenCV interfaces.</li>
+            </ul>
+
+            <h2 class="text-2xl font-semibold mt-6 mb-4">GitHub Link</h2>
+            <p class="mb-4">
+                <a href="https://github.com/shoaibniloy/Zenitsu-V1" class="text-blue-400 hover:underline">View the Zenitsu V1 Project on GitHub</a>
+            </p>
+
+            <h2 class="text-2xl font-semibold mt-6 mb-4">Let's Discuss</h2>
+            <p class="mb-4">
+                Your thoughts and feedback are welcome! Let's discuss computer vision, robotics, and reinforcement learning innovations together. Feel free to share your insights!
+            </p>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const carouselImages = document.querySelectorAll('.carousel-images img');
+            const prevButton = document.querySelector('.carousel-button.prev');
+            const nextButton = document.querySelector('.carousel-button.next');
+            let currentIndex = 0;
+
+            function showImage(index) {
+                carouselImages.forEach((img, i) => {
+                    img.classList.remove('active', 'fade-in');
+                    if (i === index) {
+                        img.classList.add('active', 'fade-in');
+                    }
+                });
+            }
+
+            prevButton.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + carouselImages.length) % carouselImages.length;
+                showImage(currentIndex);
+            });
+
+            nextButton.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % carouselImages.length;
+                showImage(currentIndex);
+            });
+
+            showImage(currentIndex);
+        });
+    </script>
+</body>
+</html>
