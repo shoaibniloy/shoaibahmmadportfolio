@@ -10760,3 +10760,88 @@ h5 {
   background-color: red;
   box-shadow: 0 0 10px red; /* This will make the glow effect */
 }
+.blog-entry {
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark background */
+  backdrop-filter: blur(10px); /* Frosted glass effect */
+  border-radius: 15px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  margin-bottom: 30px; /* Spacing between cards */
+  color: white; /* Text color for readability */
+  overflow: hidden; /* Prevents content overflow */
+}
+
+.project-image {
+  height: 200px; /* Fixed height for consistency */
+  background-size: cover; /* Scales image to cover area */
+  background-position: center; /* Centers image */
+  position: relative; /* Kept for potential future use */
+  display: block; /* Ensures <a> behaves like a block */
+  transition: transform 0.3s ease; /* Smooth zoom animation */
+}
+
+.project-image:hover {
+  transform: scale(1.05); /* Zooms image on hover */
+}
+
+.play-button {
+  display: none; /* Hides the play button as requested */
+}
+
+.text {
+  padding: 20px; /* Inner spacing for text area */
+}
+
+.heading a {
+  color: white; /* Overrides any inline color */
+  text-decoration: none; /* Removes underline */
+}
+
+.description {
+  font-size: 14px; /* Readable size */
+  margin-bottom: 10px; /* Spacing */
+}
+
+.tags {
+  margin-bottom: 10px; /* Spacing below tags */
+}
+
+.tag {
+  background-color: #555; /* Dark gray background */
+  padding: 3px 8px; /* Size of tags */
+  border-radius: 10px; /* Rounded shape */
+  font-size: 12px; /* Small text */
+  margin-right: 5px; /* Spacing between tags */
+  display: inline-block; /* Aligns tags horizontally */
+}
+
+.buttons {
+  display: flex; /* Horizontal layout */
+  gap: 10px; /* Spacing between buttons */
+}
+
+.btn-code, .btn-demo {
+  padding: 5px 10px; /* Button size */
+  border-radius: 5px; /* Rounded corners */
+  text-decoration: none; /* No underline */
+  font-size: 14px; /* Readable text */
+}
+
+.btn-code {
+  background-color: #333; /* Dark button for "Code" */
+  color: white;
+}
+
+.btn-code::before {
+  content: '< >'; /* Code icon */
+  margin-right: 5px; /* Space between icon and text */
+}
+
+.btn-demo {
+  background-color: #007bff; /* Blue button for "Demo" */
+  color: white;
+}
+
+.btn-demo::before {
+  content: '▶'; /* Play icon */
+  margin-right: 5px; /* Space between icon and text */
+}
