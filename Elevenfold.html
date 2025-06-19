@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semi-autonomous CargoMate for Factory and Warehouse Automation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+            background-color: black;
+            color: white;
+        }
+        h1, h2, h3 {
+            color: red;
+        }
+        p, ul, ol, li, pre {
+            color: white;
+        }
+        a {
+            color: #ff0000;
+        }
+        .carousel {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-item {
+            flex: 0 0 100%;
+            text-align: center;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .section-with-carousel {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+        }
+        .text-content {
+            flex: 1;
+        }
+        .carousel-content {
+            flex: 1;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <header class="bg-blue-600 text-white py-6">
+        <div class="container mx-auto px-4">
+            <a href="index.html" class="text-white hover:underline">Go Back</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Title and Introduction -->
+        <section class="mb-12">
+            <h1 class="text-4xl font-bold">Semi-autonomous CargoMate for Factory and Warehouse Automation</h1>
+            <h2 class="text-3xl font-semibold mt-4 mb-4">Introduction</h2>
+            <p class="text-lg leading-relaxed">
+                The Semi-autonomous CargoMate is an innovative project designed to automate material transportation in factory and warehouse settings. Leveraging TensorFlow's object detection API, the vehicle interprets visual cues such as directional signs, stop signals, and speed limits to navigate autonomously. This system reduces the need for human intervention, enhancing operational efficiency and safety while lowering labor costs. Its AI-driven vision system offers adaptability to dynamic environments, making it an ideal solution for modern smart factories.
+            </p>
+            <p class="text-lg leading-relaxed">
+                This project addresses the growing demand for automation in industrial logistics by integrating computer vision and machine learning to create a flexible, cost-effective navigation system. The CargoMate prototype has successfully demonstrated autonomous navigation in controlled environments, showcasing its potential to transform material handling processes.
+            </p>
+        </section>
+
+        <!-- Project Goals -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-semibold mb-4">Project Goals</h2>
+            <ul class="list-disc pl-6 text-lg">
+                <li>Develop a functional semi-autonomous vehicle for material transport.</li>
+                <li>Implement intelligent navigation using visual cues for directional decisions.</li>
+                <li>Integrate real-time traffic sign recognition (e.g., stop, turn, speed limits).</li>
+                <li>Ensure reliable obstacle detection and avoidance for safe operation.</li>
+                <li>Enhance operational efficiency and safety in industrial environments.</li>
+                <li>Facilitate adaptability to changing factory layouts using machine learning.</li>
+            </ul>
+        </section>
+
+        <!-- First Carousel Section -->
+        <section class="mb-12 section-with-carousel">
+            <div class="text-content">
+                <!-- Key Features -->
+                <h2 class="text-3xl font-semibold mb-4">Key Features</h2>
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-2xl font-medium mb-2">Vision-Based Navigation</h3>
+                        <ul class="list-disc pl-6 text-lg">
+                            <li>Uses a camera and TensorFlow Lite to detect navigation signs in real-time.</li>
+                            <li>Processes visual data to make autonomous movement decisions.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-medium mb-2">Real-Time Sign Detection</h3>
+                        <ul class="list-disc pl-6 text-lg">
+                            <li>Detects and interprets signs like 'Stop', 'Turn Left/Right', and 'Slow Down'.</li>
+                            <li>Triggers corresponding vehicle actions with high accuracy.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-medium mb-2">Obstacle Avoidance</h3>
+                        <ul class="list-disc pl-6 text-lg">
+                            <li>Utilizes an ultrasonic sensor for basic obstacle detection.</li>
+                            <li>Ensures safe navigation by avoiding collisions with dynamic objects.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-medium mb-2">Adaptability</h3>
+                        <ul class="list-disc pl-6 text-lg">
+                            <li>Learns from operational data to improve navigation over time.</li>
+                            <li>Adapts to changing factory layouts without infrastructure modifications.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-content">
+                <div class="carousel">
+                    <div class="carousel-inner" id="carouselInnerTop">
+                        <div class="carousel-item">
+                            <img src="images/cargomate1.png" alt="1">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="images/cargomate3.jpeg" alt="2">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="images/cargomate4.jpg" alt="3">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="images/cargomate5.jpg" alt="4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Architecture -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-semibold mb-4">Technical Architecture</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                The CargoMate's architecture is designed for modularity and real-time performance:
+            </p>
+            <ul class="list-disc pl-6 text-lg">
+                <li><strong>Camera Module</strong>: Captures live video for sign detection.</li>
+                <li><strong>Raspberry Pi 4B</strong>: Processes video, runs object detection, and sends commands.</li>
+                <li><strong>Arduino Nano</strong>: Controls motors and interfaces with sensors.</li>
+                <li><strong>Motor Driver (BTS7960)</strong>: Manages motor speed and direction.</li>
+                <li><strong>Ultrasonic Sensor</strong>: Provides obstacle detection data.</li>
+                <li><strong>Software Stack</strong>: Includes Python, OpenCV, TensorFlow Lite, and Arduino IDE.</li>
+            </ul>
+            <p class="text-lg leading-relaxed mt-4">
+                The system uses a continuous control loop: the camera feeds video to the Raspberry Pi, which detects signs and sends commands to the Arduino for motor control. This ensures real-time responsiveness to environmental changes.
+            </p>
+        </section>
+
+        <!-- Second Carousel Section -->
+        <section class="mb-12 section-with-carousel">
+            <div class="text-content">
+                <!-- Setup Instructions -->
+                <h2 class="text-3xl font-semibold mb-4">Setup Instructions</h2>
+                <div class="space-y-4">
+                    <h3 class="text-2xl font-medium mb-2">Hardware Assembly</h3>
+                    <ul class="list-disc pl-6 text-lg">
+                        <li>Mount Raspberry Pi, Arduino, motor driver, and sensors on the chassis.</li>
+                        <li>Connect DC motors to the motor driver and wheels.</li>
+                        <li>Attach the webcam and ultrasonic sensor to the Raspberry Pi and Arduino.</li>
+                        <li>Power the system using a LiPo battery and boost converter.</li>
+                    </ul>
+
+                    <h3 class="text-2xl font-medium mb-2">Software Installation</h3>
+                    <ul class="list-disc pl-6 text-lg">
+                        <li>Install Raspberry Pi OS and required Python libraries (OpenCV, TensorFlow Lite).</li>
+                        <li>Program the Arduino using the Arduino IDE for motor and sensor control.</li>
+                        <li>Set up the object detection model on the Raspberry Pi.</li>
+                        <li>Integrate all components and test the control loop.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="carousel-content">
+                <div class="carousel">
+                    <div class="carousel-inner" id="carouselInnerArch">
+                        <div class="carousel-item">
+                            <img src="images/cargomate2.png" alt="System Architecture">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Third Carousel Section -->
+        <section class="mb-12 section-with-carousel">
+            <div class="text-content">
+                <!-- Performance Metrics -->
+                <h2 class="text-3xl font-semibold mb-4">Performance Metrics</h2>
+                <div class="space-y-4">
+                    <!-- Add performance metrics content here if available -->
+                </div>
+                <!-- Applications -->
+                <h2 class="text-3xl font-semibold mb-4">Applications</h2>
+                <ul class="list-disc pl-6 text-lg">
+                    <li><strong>Material Transportation</strong>: Automates the movement of goods in factories and warehouses.</li>
+                    <li><strong>Logistics Optimization</strong>: Improves efficiency by reducing manual labor and errors.</li>
+                    <li><strong>Safety Enhancement</strong>: Minimizes human exposure to hazardous environments.</li>
+                    <li><strong>Scalability</strong>: Adapts to various industrial settings with minimal infrastructure changes.</li>
+                </ul>
+            </div>
+            <div class="carousel-content">
+                <div class="carousel">
+                    <div class="carousel-inner" id="carouselInnerMetrics">
+                        <div class="carousel-item">
+                            <img src="images/cargomate8.jpg" alt="Hardware Components">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="images/cargomate11.jpg" alt="Software Stack">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="images/cargomate12.jpg" alt="Software Stack">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="images/cargomate13.jpg" alt="Software Stack">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+
+        <!-- Future Roadmap -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-semibold mb-4">Future Roadmap</h2>
+            <ul class="list-disc pl-6 text-lg">
+                <li><strong>Increased Processing Power</strong>: Upgrade to Nvidia Jetson Nano for faster detection.</li>
+                <li><strong>Advanced Sensing</strong>: Integrate LiDAR for precise 3D mapping and obstacle avoidance.</li>
+                <li><strong>Sensor Fusion</strong>: Combine data from multiple sensors for improved navigation.</li>
+                <li><strong>Complex Algorithms</strong>: Implement advanced path planning and decision-making techniques.</li>
+                <li><strong>System Integration</strong>: Connect with warehouse management systems for task coordination.</li>
+            </ul>
+        </section>
+
+        <!-- Skills -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-semibold mb-4">Skills</h2>
+            <ul class="list-disc pl-6 text-lg">
+                <li><strong>Computer Vision</strong>: Object detection and image processing with TensorFlow and OpenCV.</li>
+                <li><strong>Embedded Systems</strong>: Raspberry Pi and Arduino integration for real-time control.</li>
+                <li><strong>Control Systems</strong>: Motor control logic for autonomous movement.</li>
+                <li><strong>Sensor Technology</strong>: Camera and ultrasonic sensor interfacing.</li>
+                <li><strong>Software Development</strong>: Python and C++ for system programming.</li>
+                <li><strong>Engineering Design</strong>: System architecture and component selection.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2025 CargoMate Project. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Carousels -->
+    <script>
+        function initCarousel(carouselId) {
+            const carouselInner = document.getElementById(carouselId);
+            const items = carouselInner.getElementsByClassName('carousel-item');
+            let currentIndex = 0;
+
+            function slideCarousel() {
+                currentIndex = (currentIndex + 1) % items.length;
+                carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
+            }
+
+            setInterval(slideCarousel, 3000);
+        }
+
+        // Initialize all carousels
+        initCarousel('carouselInnerTop');
+        initCarousel('carouselInnerArch');
+        initCarousel('carouselInnerMetrics');
+    </script>
+</body>
+</html>
