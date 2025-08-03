@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Turbofan Engine Conceptual Model</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css/aos.css">
+    <link rel="stylesheet" href="css/ionicons.min.css">
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+      /* Remove margin and padding between sections */
+      .ftco-section {
+        margin: 0 !important; /* Ensure no margin */
+        padding: 0 !important; /* Remove padding */
+      }
+
+      .carousel {
+        margin-bottom: 0 !important; /* Remove bottom margin for the carousel */
+      }
+
+      .container {
+        padding: 0 !important; /* Remove all padding */
+      }
+
+      /* Ensure hero section doesn't add margin */
+      .hero-wrap {
+        margin-top: 0 !important; /* Remove margin from hero section */
+        padding-top: 0 !important; /* Remove padding from hero section */
+      }
+
+      /* Specific styling for content */
+      .content-section {
+        padding: 20px; /* Add padding to the content */
+        font-family: Poppins, sans-serif;
+      }
+
+      .content-section h2, .content-section h4 {
+        margin-top: 10px;
+      }
+
+      .content-section p, .content-section ul {
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+    
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light site-navbar-target" id="ftco-navbar">
+      <div class="container">
+          <a class="navbar-brand red-text" href="index.html">Go Back</a>
+          <div class="collapse navbar-collapse" id="ftco-nav">
+          </div>
+      </div>
+    </nav>  
+
+<!-- Video Section -->
+<div class="video-section mb-4">
+  <div class="video-card position-relative">
+    <div class="video-container">
+      <iframe width="100%" height="315" src="https://www.youtube.com/embed/KLqPwthtn4M" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+    <!-- Content Section -->
+    <section class="content-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 ftco-animate">
+            <h2>ExoGait Vision: Real-Time Gait Analysis for Exoskeleton Development</h2>
+            <p>ExoGait Vision is a Python-based GUI application designed for real-time human gait analysis using computer vision. Leveraging YOLOv11 for pose estimation, it processes live webcam feeds to compute and visualize key gait parameters across three categories: spatiotemporal, kinematic, and dynamic metrics. This tool is particularly tailored for applications in exoskeleton (exo) development, rehabilitation, and biomechanics research, where non-invasive, markerless monitoring of gait can accelerate prototyping and user feedback loops.</p>
+            <p>The application runs in a dark-themed PyQt6 interface with tabbed views for different parameter sets, live video annotation, real-time plots, and optional CSV logging. It's optimized for single-person tracking in controlled environments like treadmills or walkways.</p>
+            
+            <h4>Why This Tool? And Where Are the Research Gaps?</h4>
+            <p>I must highlight that while ExoGait Vision bridges accessible gait analysis, significant gaps persist. Gait analysis is crucial in fields like robotics (e.g., exoskeleton control), sports science, and clinical rehab. Traditional systems (e.g., Vicon or IMU-based) are expensive and intrusive. Vision-based approaches like this one democratize access but reveal key research gaps:</p>
+            <ul>
+              <li><strong>Accuracy in Dynamic Environments:</strong> YOLO pose estimation performs well indoors but struggles with occlusions, varying lighting, or multi-person scenarios—opportunities for hybrid models (e.g., integrating depth sensors like Kinect) to fill this void.</li>
+              <li><strong>Calibration and Scalability:</strong> Hardcoded SCALE_FACTOR assumes pixel-to-meter conversion; real-world gaps in auto-calibration using known body metrics or AI-driven anthropometry await innovative solutions.</li>
+              <li><strong>Exo-Specific Metrics:</strong> While it includes asymmetry and stability scores, there's untapped potential for exo-integration, like real-time feedback to actuators or predicting fatigue via ML on variability trends— a fertile ground for research.</li>
+              <li><strong>Validation Against Gold Standards:</strong> No built-in benchmarking; future work could compare outputs to motion capture systems, highlighting gaps in swing/stance phase detection under variable speeds.</li>
+              <li><strong>Ethical and Privacy Gaps:</strong> Webcam-based tracking raises data privacy concerns in clinical use—research needed on anonymized processing or edge computing to address this emerging issue.</li>
+            </ul>
+            <p>This repo serves as a starting point to bridge these gaps. Contributions welcome!</p>
+            
+            <h4>Features</h4>
+            <ul>
+              <li><strong>Live Pose Estimation:</strong> Uses YOLOv11n-pose for keypoint detection on webcam input.</li>
+              <li><strong>Tabbed Interface:</strong>
+                <ul>
+                  <li><strong>Spatiotemporal Parameters:</strong> Cadence (steps/min), step time (s), stride length (m), gait speed (m/s), and current gait phase (stance, swing, double support).</li>
+                  <li><strong>Kinematic Parameters:</strong> Left/right hip and knee angles (degrees).</li>
+                  <li><strong>Dynamic & Exo-Specific Metrics:</strong> Average limb velocity (m/s), asymmetry index (0-1), step variability (SD), postural stability (low = good).</li>
+                </ul>
+              </li>
+              <li><strong>Real-Time Plotting:</strong> Matplotlib-based dynamic graphs updating every 20ms, with navigation toolbars.</li>
+              <li><strong>Event Detection:</strong> Heel strikes and toe-offs via peak finding on relative ankle positions.</li>
+              <li><strong>CSV Logging:</strong> Toggleable export of metrics with timestamps for post-analysis.</li>
+              <li><strong>Customization:</strong> Enable/disable metric computation per tab; clear data; open CSV in system viewer.</li>
+              <li><strong>Performance Optimizations:</strong> Conditional computations to reduce CPU load; buffers for efficient event detection.</li>
+            </ul>
+            
+            <h4>Requirements</h4>
+            <ul>
+              <li>Python 3.12+ (tested on 3.12.3)</li>
+              <li>Libraries (install via pip): <em>Note: Ultralytics auto-downloads YOLO models on first run.</em></li>
+              <li>Hardware:
+                <ul>
+                  <li>Webcam (tested on standard laptop cams at ~30FPS).</li>
+                  <li>CPU/GPU: Runs on CPU; GPU acceleration via Ultralytics if CUDA available.</li>
+                </ul>
+              </li>
+            </ul>
+            
+            <h4>Installation</h4>
+            <p>Clone the repo:</p>
+            <p><code>git clone https://github.com/yourusername/exogait-vision.git cd exogait-vision</code></p>
+            <p>Install dependencies: <code>pip install -r requirements.txt</code></p>
+            
+            <h4>Usage</h4>
+            <ul>
+              <li>The GUI launches with three tabs.</li>
+              <li>Live video appears on the left; plots on the right.</li>
+              <li>Toggle "Enable Metrics" to pause/resume computations and plots.</li>
+              <li>Click "Start Log" to begin CSV export (appends to spatio.csv, kinematic.csv, dynamic.csv).</li>
+              <li>"Clear" resets plots and truncates CSV.</li>
+              <li>"Open CSV" views the file in your default app (e.g., Excel).</li>
+            </ul>
+            
+            <h4>Configuration (edit in code)</h4>
+            <ul>
+              <li><strong>SCALE_FACTOR:</strong> Calibrate pixels to meters (e.g., measure known distance in frame).</li>
+              <li><strong>TREADMILL_SPEED:</strong> Set if known (overrides estimated gait speed).</li>
+              <li><strong>BUFFER_SIZE / MIN_PEAK_DIST:</strong> Tune for event detection sensitivity.</li>
+              <li><strong>CSV paths:</strong> Change self.csv_* in MainWindow.__init__.</li>
+            </ul>
+            
+            <h4>Example Output (CSV snippet for spatiotemporal)</h4>
+            <p><em>Potential Improvements & Research Opportunities</em></p>
+            <p>To address the gaps I've identified:</p>
+            <ul>
+              <li><strong>Multi-Person Support:</strong> Extend to track multiple subjects (e.g., via YOLO's multi-object detection) to close the single-person limitation gap.</li>
+              <li><strong>ML Enhancements:</strong> Train custom YOLO on gait datasets for better keypoint accuracy; integrate RNNs for phase prediction, filling the robustness gap.</li>
+              <li><strong>Hardware Integration:</strong> API for exoskeleton sync (e.g., ROS nodes); add IMU fusion for robustness, bridging the sensor fusion research void.</li>
+              <li><strong>Benchmarking:</strong> Add validation module comparing to datasets like HuGaDB or MAREA, to quantify and reduce accuracy gaps.</li>
+              <li><strong>UI/UX:</strong> Add export to video, custom themes, or web-based deployment via Streamlit, enhancing usability in research settings.</li>
+              <li><strong>Edge Cases:</strong> Test on diverse populations (age, disabilities) to uncover bias gaps in pose models and promote inclusive research.</li>
+            </ul>
+            <p>If you're researching gait/exos, this tool highlights the need for more open datasets on vision-based metrics validation!</p>
+            
+            <h4>Contributing</h4>
+            <p>Pull requests welcome! Focus on:</p>
+            <ul>
+              <li>Bug fixes (e.g., keypoint confidence handling).</li>
+              <li>New features (e.g., foot clearance metric).</li>
+              <li>Docs/tests.</li>
+            </ul>
+            <p>Steps:</p>
+            <ol>
+              <li>Fork the repo.</li>
+              <li>Create feature branch: <code>git checkout -b feature/new-metric</code>.</li>
+              <li>Commit: <code>git commit -m "Add foot clearance"</code>.</li>
+              <li>Push: <code>git push origin feature/new-metric</code>.</li>
+              <li>Open PR.</li>
+            </ol>
+            
+            <h4>License</h4>
+            <p>MIT License. See LICENSE for details.</p>
+            
+            <h4>Acknowledgments</h4>
+            <p>Dr. Mojtaba Sharifi Lab Director ARMS LAB, San Jose State University, USA <a href="https://sites.google.com/sjsu.edu/armslab/meet-the-team" target="_blank">https://sites.google.com/sjsu.edu/armslab/meet-the-team</a></p>
+            <p>For questions: Open an issue or contact [shoaibniloy434545@gmail.com]. Let's fill those research gaps! 🚀</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.1.3.js"></script>
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.stellar.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/jquery.animateNumber.min.js"></script>
+    <script src="js/scrollax.min.js"></script>
+    <script src="js/main.js"></script>
+    
+  </body>
+</html>
