@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>RF-DETR Custom Training Pipeline</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css/aos.css">
+    <link rel="stylesheet" href="css/ionicons.min.css">
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+      /* Remove margin and padding between sections */
+      .ftco-section {
+        margin: 0 !important; /* Ensure no margin */
+        padding: 0 !important; /* Remove padding */
+      }
+      .carousel {
+        margin-bottom: 0 !important; /* Remove bottom margin for the carousel */
+      }
+      .container {
+        padding: 0 !important; /* Remove all padding */
+      }
+      /* Ensure hero section doesn't add margin */
+      .hero-wrap {
+        margin-top: 0 !important; /* Remove margin from hero section */
+        padding-top: 0 !important; /* Remove padding from hero section */
+      }
+      /* Specific styling for content */
+      .content-section {
+        padding: 20px; /* Add padding to the content */
+        font-family: Poppins, sans-serif;
+      }
+      .content-section h2, .content-section h4 {
+        margin-top: 10px;
+      }
+      .content-section p, .content-section ul {
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+   
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light site-navbar-target" id="ftco-navbar">
+      <div class="container">
+          <a class="navbar-brand red-text" href="index.html">Go Back</a>
+          <div class="collapse navbar-collapse" id="ftco-nav">
+          </div>
+      </div>
+    </nav>
+    <!-- Video Section -->
+    <div class="video-section mb-4">
+      <div class="video-card position-relative">
+        <div class="video-container">
+          <iframe width="100%" height="315" src="https://www.youtube.com/embed/KLqPwthtn4M" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+    <!-- Content Section -->
+    <section class="content-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 ftco-animate">
+            <h2>RF-DETR Custom Training Pipeline</h2>
+            <p>A customizable and memory-efficient pipeline for training the RF-DETR Nano model on object detection tasks. Designed for elegance and reliability, this implementation introduces novel features such as multi-scale data augmentation, adaptive learning rate scheduling, and robust checkpoint resumption with validation checks. Built on the rfdetr library, the pipeline supports training from scratch or resuming from checkpoints, making it ideal for iterative experimentation on custom COCO-format datasets.</p>
+            
+            <h4>🚀 Features</h4>
+            <ul>
+              <li><strong>From-Scratch Training:</strong> Train RF-DETR Nano without pre-trained weights using multi-scale augmentation and adaptive LR scheduling.</li>
+              <li><strong>Resumable Training:</strong> Resume from checkpoints with compatibility checks and immediate validation mAP.</li>
+              <li><strong>Memory Optimized:</strong> Gradient accumulation, checkpointing, and CUDA tweaks for stability on low-VRAM devices (e.g., NVIDIA T4).</li>
+              <li><strong>Flexible Dataset Support:</strong> Train on any COCO-format dataset (e.g., Roboflow exports or custom).</li>
+              <li><strong>Visual Monitoring:</strong> Integrates TensorBoard for real-time training insights.</li>
+              <li><strong>ONNX Export:</strong> Export trained models to ONNX for deployment.</li>
+            </ul>
+            
+            <h4>🛠️ Installation</h4>
+            <p>Install dependencies (in Colab or your local environment):</p>
+            <p><code>pip install rfdetr rfdetr[metrics] rfdetr[onnxexport] roboflow --upgrade -q</code></p>
+            <p>If using CUDA:</p>
+            <p><code>import os<br>os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'expandable_segments:True'</code></p>
+            
+            <h4>📂 Dataset Preparation</h4>
+            <p>The pipeline expects a dataset in COCO format:</p>
+            <p><code>/your-dataset<br> ├── train/<br> │ └── _annotations.coco.json<br> ├── val/<br> │ └── _annotations.coco.json<br> └── test/<br>     └── _annotations.coco.json</code></p>
+            <p>Download via Roboflow:</p>
+            <p><code>from roboflow import Roboflow<br>rf = Roboflow(api_key="YOUR_API_KEY")<br>project = rf.workspace("YOUR_WORKSPACE").project("YOUR_PROJECT")<br>dataset = project.version(YOUR_VERSION).download("coco")<br># dataset.location will point to your dataset path</code></p>
+            
+            <h4>🚦 Usage</h4>
+            <h5>🔧 Training from Scratch</h5>
+            <p><code>from rfdetr import RFDETRBase<br>import torch<br>import torchvision.transforms as T<br>from torch.optim.lr_scheduler import ReduceLROnPlateau<br><br>class OptimizedRFDETR(RFDETRBase):<br>    def __init__(self, *args, **kwargs):22>        super().__init__(*args, **kwargs)<br>        self.small_scale_prob = 0.5<br>        self.scale_transform = T.Compose([<br>            T.RandomResize([int(448 * s) for s in [0.5, 0.75, 1.0, 1.25]]),<br>            T.RandomCrop(448),<br>        ])<br>        self.scheduler = None<br>        self.best_mAP = 0.0<br><br>    def adjust_annotations(self, annotations, scale_factor):<br>        if not isinstance(annotations, dict) or 'boxes' not in annotations:<br>            raise ValueError("Invalid annotations format - Expected dict with 'boxes' key")<br>        if not isinstance(annotations['boxes'], torch.Tensor) or annotations['boxes'].ndim != 2 or annotations['boxes'].shape[1] != 4:<br>            raise ValueError("Invalid 'boxes' format - Expected tensor of shape (N, 4)")<br>        annotations['boxes'] *= scale_factor<br>        annotations['boxes'] = torch.clamp(annotations['boxes'], 0.0, 1.0)<br>        return annotations<br><br>    def train(self, *args, **kwargs):<br>        if self.scheduler is None:<br>            if self.optimizer is None:<br>                raise ValueError("Optimizer not initialized - Ensure model is properly set up")<br>            self.scheduler = ReduceLROnPlateau(self.optimizer, mode='max', factor=0.5, patience=2, min_lr=1e-6)<br>        epochs = kwargs.get('epochs', 20)<br>        for epoch in range(epochs):<br>            if hasattr(self, 'dataloader') and self.dataloader is not None:<br>                for batch in self.dataloader:<br>                    if not isinstance(batch, dict) or 'images' not in batch or 'annotations' not in batch:<br>                        raise ValueError("Invalid batch format - Expected dict with 'images' and 'annotations'")<br>                    if torch.rand(1) < self.small_scale_prob:<br>                        original_shape = batch['images'].shape<br>                        if original_shape[2] != original_shape[3] or original_shape[2] % 32 != 0:<br>                            raise ValueError(f"Image shape {original_shape} not square or divisible by 32")<br>                        batch['images'] = self.scale_transform(batch['images'])<br>                        scale_factor = getattr(self.scale_transform, 'scale', 1.0)<br>                        if not isinstance(scale_factor, float) or scale_factor <= 0:<br>                            raise ValueError("Invalid scale_factor - Expected positive float")<br>                        batch['annotations'] = self.adjust_annotations(batch['annotations'], scale_factor)<br>            super().train_one_epoch()<br>            val_mAP = self.evaluate()<br>            if not isinstance(val_mAP, float) or val_mAP < 0 or val_mAP > 1:<br>                raise ValueError(f"Invalid val_mAP {val_mAP} - Expected float between 0 and 1")<br>            self.scheduler.step(val_mAP)<br>            if val_mAP > self.best_mAP:<br>                self.best_mAP = val_mAP<br>                torch.save(self.state_dict(), f"{kwargs['output_dir']}/ema_checkpoint.pth")<br>        super().train(*args, **kwargs)</code></p>
+            <p>Start Training:</p>
+            <p><code>model = OptimizedRFDETR(pretrain_weights=None)<br>model.train(<br>    dataset_dir="/path/to/your-dataset",<br>    epochs=20,<br>    batch_size=2,<br>    grad_accum_steps=8,<br>    lr=1e-4,<br>    lr_encoder=1e-5,<br>    output_dir="./output",<br>    resolution=448,<br>    weight_decay=0.01,<br>    use_ema=True,<br>    gradient_checkpointing=True,<br>    early_stopping=True,<br>    early_stopping_patience=5,<br>    early_stopping_min_delta=0.01,<br>    checkpoint_interval=2,<br>    tensorboard=True<br>)</code></p>
+            
+            <h5>🔄 Resuming Training</h5>
+            <p><code>class ResumableRFDETR(RFDETRBase):<br>    def __init__(self, *args, **kwargs):<br>        super().__init__(*args, **kwargs)<br>        self.resume_path = None<br><br>    def resume_from_checkpoint(self, resume_path):<br>        if not isinstance(resume_path, str):<br>            raise ValueError("Invalid resume_path - Expected string path to .pth file")<br>        if not os.path.exists(resume_path):<br>            raise FileNotFoundError(f"Checkpoint not found at {resume_path}")<br>        if not resume_path.endswith('.pth'):<br>            raise ValueError("Invalid file extension - Expected .pth checkpoint file")<br>        try:<br>            checkpoint = torch.load(resume_path, map_location='cpu')<br>            if not isinstance(checkpoint, dict) or 'model_state_dict' not in checkpoint:<br>                raise ValueError("Invalid checkpoint format - Expected dict with 'model_state_dict' key")<br>            missing_keys, unexpected_keys = self.load_state_dict(checkpoint['model_state_dict'], strict=False)<br>            if missing_keys or unexpected_keys:<br>                print(f"Warning: Missing keys: {missing_keys}; Unexpected keys: {unexpected_keys}")<br>            if 'optimizer_state_dict' in checkpoint and self.optimizer is not None:<br>                self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])<br>            val_mAP = self.evaluate(subset_size=10)<br>            if not isinstance(val_mAP, float) or val_mAP < 0 or val_mAP > 1:<br>                raise ValueError(f"Invalid resumed mAP {val_mAP} - Expected float between 0 and 1")<br>            print(f"Resumed from {resume_path} with initial mAP: {val_mAP:.4f}")<br>            self.resume_path = resume_path<br>        except Exception as e:<br>            raise RuntimeError(f"Error loading checkpoint: {str(e)}")<br><br>model = ResumableRFDETR(pretrain_weights=None)<br>checkpoint_path = "./output/ema_checkpoint.pth"<br>model.resume_from_checkpoint(checkpoint_path)<br>model.train(<br>    dataset_dir="/path/to/your-dataset",<br>    epochs=20,<br>    batch_size=2,<br>    grad_accum_steps=8,<br>    lr=1e-4,<br>    lr_encoder=1e-5,<br>    output_dir="./output",<br>    resolution=448,<br>    weight_decay=0.01,<br>    use_ema=True,<br>    gradient_checkpointing=True,<br>    early_stopping=True,<br>    early_stopping_patience=5,<br>    early_stopping_min_delta=0.01,<br>    checkpoint_interval=2,<br>    tensorboard=True,<br>    resume=checkpoint_path<br>)</code></p>
+            
+            <h4>📈 Visualization</h4>
+            <p>In Jupyter or Colab:</p>
+            <p><code>%load_ext tensorboard<br>%tensorboard --logdir ./output</code></p>
+            <p>From terminal:</p>
+            <p><code>tensorboard --logdir ./output</code></p>
+            
+            <h4>🧪 Testing</h4>
+            <p><code>model = OptimizedRFDETR(pretrain_weights="./output/ema_checkpoint.pth")<br>test_image_path = "/path/to/your-dataset/test/your_test_image.jpg"<br>detections = model.predict(test_image_path)<br>print("Test Detections:", detections)</code></p>
+            <p>List test images:</p>
+            <p><code>ls /path/to/your-dataset/test | head -5</code></p>
+            
+            <h4>📤 Export to ONNX</h4>
+            <p><code>model.export() # Saves to output_dir as ONNX file</code></p>
+            
+            <h4>🧠 Novelties & Analysis</h4>
+            <ul>
+              <li><strong>Multi-Scale Augmentation:</strong> Improves detection of small and varying-scale objects by randomly resizing and cropping images, along with proper annotation scaling and clamping.</li>
+              <li><strong>Adaptive LR Scheduling:</strong> Reduces learning rate dynamically when validation mAP plateaus.</li>
+              <li><strong>Checkpoint Sanity Checks:</strong> Supports partial state loading and quick validation to ensure resumption correctness.</li>
+              <li><strong>Robust Error Handling:</strong> All core functions include shape, type, and logic checks to prevent silent failures.</li>
+              <li><strong>Extensibility:</strong> Easily extendable for new augmentations (e.g., MixUp), hybrid learning schedulers, or other DETR variants.</li>
+            </ul>
+            
+            <h4>📄 License</h4>
+            <p>This project is licensed under the MIT License. See LICENSE for full details.</p>
+            
+            <h4>🤝 Contributions</h4>
+            <p>Contributions, issues, and feature requests are welcome. Feel free to open a pull request or discussion thread.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.1.3.js"></script>
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.stellar.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/jquery.animateNumber.min.js"></script>
+    <script src="js/scrollax.min.js"></script>
+    <script src="js/main.js"></script>
+   
+  </body>
+</html>
