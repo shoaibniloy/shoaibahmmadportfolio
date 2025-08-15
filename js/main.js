@@ -547,7 +547,7 @@ function openFullscreen(img) {
     return (match && match[2].length === 11) ? match[2] : null;
   }
 
-  const words = ['Mechanical Engineer', 'Robotics Enthusiast', 'Coder', 'Machine Learning Enthusiast', 'CAD Expert'];
+  const words = ['Mechanical Engineer', 'Robotics Enthusiast', 'Computer Vision Expert', 'Perception', 'Navigation', 'Manipulation', 'Machine Learning Enthusiast', 'CAD Expert'];
   let wordIndex = 0;
   let charIndex = 0;
   let isDeleting = false;
