@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Vision-Based Bee Behavior (Bee Vision GUI)</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Fonts & Theme CSS (same stack as your page) -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css/aos.css">
+    <link rel="stylesheet" href="css/ionicons.min.css">
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+      /* Keep overall structure identical */
+      .ftco-section { margin: 0 !important; padding: 0 !important; }
+      .carousel { margin-bottom: 0 !important; }
+      .container { padding: 0 !important; }
+      .hero-wrap { margin-top: 0 !important; padding-top: 0 !important; }
+
+      .content-section { padding: 20px; font-family: Poppins, sans-serif; }
+      .content-section h2, .content-section h4 { margin-top: 10px; }
+      .content-section p, .content-section ul { margin-bottom: 15px; }
+
+      /* Full-image, non-cropped slides + lightbox */
+      .carousel-item { background:#000; min-height:40vh; text-align:center; }
+      .carousel-fit {
+        max-height: 80vh;
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        object-fit: contain;
+        margin: 0 auto;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light site-navbar-target" id="ftco-navbar">
+      <div class="container">
+        <a class="navbar-brand red-text" href="index.html">Go Back</a>
+        <div class="collapse navbar-collapse" id="ftco-nav"></div>
+      </div>
+    </nav>
+
+    <!-- Image Carousel Section -->
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-12 ftco-animate">
+            <div id="projectCarousel" class="carousel slide" data-ride="carousel" data-interval="5000">
+              <div class="carousel-inner">
+
+                <!-- Slide 1 (repo demo GIF) -->
+                <div class="carousel-item active">
+                  <a href="https://raw.githubusercontent.com/shoaibniloy/Vision-Based-Bee-Behavior-/main/bee%20vision.gif"
+                     class="image-popup" title="Bee Vision – Real-Time GUI Demo">
+                    <img src="https://raw.githubusercontent.com/shoaibniloy/Vision-Based-Bee-Behavior-/main/bee%20vision.gif"
+                         class="d-inline-block carousel-fit"
+                         alt="Bee Vision real-time detection GUI demo">
+                  </a>
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>Real-Time Detection & Tracking (YOLOv11 + ByteTrack)</h5>
+                  </div>
+                </div>
+
+                <!-- Slide 2 (add your own screenshot later if available) -->
+                <div class="carousel-item">
+                  <a href="https://opengraph.githubassets.com/1/shoaibniloy/Vision-Based-Bee-Behavior-"
+                     class="image-popup" title="Repository Preview">
+                    <img src="https://opengraph.githubassets.com/1/shoaibniloy/Vision-Based-Bee-Behavior-"
+                         class="d-inline-block carousel-fit"
+                         alt="Repository preview image">
+                  </a>
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>Repository Snapshot</h5>
+                  </div>
+                </div>
+
+              </div>
+
+              <a class="carousel-control-prev" href="#projectCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control-next" href="#projectCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+            </div>
+          </div> <!-- .col-lg-12 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Content Section -->
+    <section class="content-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 ftco-animate">
+            <h2>Vision-Based Bee Behavior – Real-Time Honeybee Sensing GUI</h2>
+
+            <h4>Overview:</h4>
+            <p>
+              A <strong>PyQt6</strong> desktop application for real-time monitoring of hive activity using <strong>YOLOv11</strong> (Ultralytics) for detection
+              and <strong>ByteTrack</strong> for multi-object tracking. The tool detects <em>bees</em>, <em>mites</em>, <em>pollen</em>, <em>queen</em>, <em>queen_cell</em>, and <em>varroa</em>,
+              then logs behavior, traffic counts, and anomalies. Optional <strong>ONNX</strong> behavior models and <strong>Isolation Forest</strong> can enrich insights.
+            </p>
+
+            <h4>Features:</h4>
+            <ul>
+              <li><strong>Real-Time Detection & Tracking:</strong> YOLOv11 + ByteTrack with robust class aliasing.</li>
+              <li><strong>Behavior Insights:</strong> entrance/exit counting, queen tracking, optional behavior classification via ONNX or heuristics.</li>
+              <li><strong>Health Monitoring:</strong> dead-bee detection, pest (mite/varroa) statistics, anomaly detection, swarm-risk estimation.</li>
+              <li><strong>Interactive GUI:</strong> live annotated video feed, metrics panel with counters and reset controls.</li>
+            </ul>
+
+            <h4>Getting Started:</h4>
+            <ol>
+              <li>Clone:
+                <pre><code>git clone https://github.com/shoaibniloy/Vision-Based-Bee-Behavior-.git
+cd Vision-Based-Bee-Behavior-</code></pre>
+              </li>
+              <li>Install (Python 3.10+ recommended):
+                <pre><code>pip install -r requirements.txt</code></pre>
+                Includes: PyQt6, opencv-python, ultralytics, supervision, scikit-learn, onnxruntime (optional).
+              </li>
+              <li>Add your trained YOLOv11 weights as <code>bee.pt</code> in the project root (classes: bee, mite, pollen, queen, queen_cell, varroa).</li>
+              <li>Run:
+                <pre><code>python bee-vision.py</code></pre>
+                Defaults to webcam <code>0</code>; switch to a video via the GUI’s “Open File…” option.
+              </li>
+            </ol>
+
+            <h4>Project Structure:</h4>
+            <pre><code>Vision-Based-Bee-Behavior-/
+├── bee-vision.py       # Main PyQt6 app
+├── bee.pt              # YOLOv11 weights (user-supplied)
+├── requirements.txt    # Dependencies
+└── README.md           # Documentation
+            </code></pre>
+
+            <h4>Tech Stack & Skills:</h4>
+            <ul>
+              <li><strong>Computer Vision:</strong> YOLOv11 (Ultralytics), OpenCV, Supervision, ByteTrack.</li>
+              <li><strong>ML/Analytics:</strong> Isolation Forest, optional ONNX behavior model.</li>
+              <li><strong>App:</strong> PyQt6 GUI, live overlays & metrics.</li>
+              <li><strong>Ops:</strong> GPU-accelerated inference recommended for smooth real-time performance.</li>
+            </ul>
+
+            <h4>Repository:</h4>
+            <p>
+              <a href="https://github.com/shoaibniloy/Vision-Based-Bee-Behavior-" target="_blank" rel="noopener">
+                View on GitHub
+              </a>
+            </p>
+
+            <h4>Notes:</h4>
+            <ul>
+              <li>Provide a well-trained <code>bee.pt</code> model for best results; dataset quality strongly influences behavior metrics.</li>
+              <li>You can plug in your own ONNX behavior classifier; otherwise, heuristic fallbacks are used.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JS -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.1.3.js"></script>
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.stellar.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/jquery.animateNumber.min.js"></script>
+    <script src="js/scrollax.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- Lightbox init for clickable/expandable slides -->
+    <script>
+      $(function () {
+        $('.carousel .image-popup').magnificPopup({
+          type: 'image',
+          gallery: { enabled: true },
+          closeOnContentClick: true,
+          mainClass: 'mfp-img-mobile',
+          image: { verticalFit: true }
+        });
+      });
+    </script>
+  </body>
+</html>
