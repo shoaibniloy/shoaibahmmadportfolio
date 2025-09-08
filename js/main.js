@@ -615,4 +615,17 @@ function openFullscreen(img) {
 	  setInterval(moveToNextSlide, 2000);
 	});
   });
+
+  // Lightbox for images inside the carousel
+  $(function () {
+    $('.carousel .image-popup').magnificPopup({
+      type: 'image',
+      gallery: { enabled: true },
+      closeOnContentClick: true,
+      mainClass: 'mfp-img-mobile',
+      image: { verticalFit: true }
+    });
+  });
+
+
   

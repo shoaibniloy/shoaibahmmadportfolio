@@ -10845,3 +10845,17 @@ h5 {
   content: '▶'; /* Play icon */
   margin-right: 5px; /* Space between icon and text */
 }
+/* Show each image fully within the slide */
+.carousel-item {
+  background: #000;           /* optional: letterbox look */
+  min-height: 40vh;
+}
+.carousel-fit {
+  max-height: 80vh;           /* keeps full image visible on most screens */
+  width: auto;                /* keep natural width */
+  max-width: 100%;            /* but don't overflow horizontally */
+  height: auto;               /* preserve aspect ratio */
+  object-fit: contain;        /* never crop */
+  margin: 0 auto;             /* center horizontally */
+  display: block;
+}
