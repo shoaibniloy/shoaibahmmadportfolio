@@ -4,7 +4,10 @@
     <title>6-DOF Robotic Arm with Real-Time Control and 3D Visualization</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
+
+    <!-- Added Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
     <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="css/animate.css">
@@ -75,7 +78,7 @@
     </style>
   </head>
   <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
-    
+
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light site-navbar-target" id="ftco-navbar">
       <div class="container">
           <a class="navbar-brand red-text" href="index.html">Go Back</a>
@@ -83,6 +86,7 @@
           </div>
       </div>
     </nav>  
+
 <!-- Video Section -->
 <section class="ftco-section">
   <div class="container">
@@ -95,195 +99,169 @@
     </div>
   </div>
 </section>
-    <!-- Content Section -->
-    <section class="content-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 ftco-animate">
-            <h2>6-DOF Robotic Arm with Real-Time Control and 3D Visualization</h2>
 
-            <h4>Overview:</h4>
-            <p>This project features a 6-degree-of-freedom (DOF) robotic arm designed for precise manipulation tasks, controlled via a custom-built graphical user interface (GUI) developed in Python using PyQt6. The arm, powered by six servo motors, is capable of complex movements in a 3D workspace, suitable for applications like pick-and-place tasks, educational robotics, or small-scale automation. The GUI provides intuitive control, real-time 3D visualization, and automation features, demonstrating a blend of mechanical engineering, control systems, and software development.</p>
-            <!-- Image Carousel Section -->
-            <h4>Key Features</h4>
-            <ol>
-              <li><strong>Robotic Arm Hardware</strong>:
-                <ul>
-                  <li><strong>Structure</strong>: The arm consists of six servo motors mounted on a circular base, with link lengths of 20 mm, 80 mm, 120 mm, 90 mm, 32 mm, and 32 mm, culminating in a forked end effector (likely a gripper).</li>
-                  <li><strong>Motion</strong>: The arm achieves 6 DOF through a combination of yaw (servos 0 and 4) and pitch (servos 1, 2, 3, and 5) movements, enabling flexible positioning and orientation in 3D space.</li>
-                  <li><strong>Reach</strong>: The arm’s maximum straight-line length is approximately 374 mm, with an effective reach that varies based on joint angles.</li>
-                  <li><strong>Design Considerations</strong>: Lightweight materials (e.g., aluminum or composite) reduce servo strain, and the arm likely uses standard hobbyist servos with torque ratings of 10–50 N·cm, suitable for light payloads.</li>
-                </ul>
-              </li>
-              <li><strong>Control Software</strong>:
-                <ul>
-                  <li><strong>Platform</strong>: Built using Python with PyQt6 for the GUI, interfaced with a microcontroller (e.g., Arduino) via serial communication (PCA9685 servo controller).</li>
-                  <li><strong>Functionality</strong>:
-                    <ul>
-                      <li><strong>Manual Control</strong>: Users can adjust each servo’s angle (1–179 degrees) using sliders, buttons, or text inputs, with customizable speed and step sizes.</li>
-                      <li><strong>3D Visualization</strong>: A real-time 3D plot, powered by Matplotlib, displays the arm’s configuration, including joint positions, link lengths, and the gripper’s orientation, with adjustable view angles (elevation and azimuth).</li>
-                      <li><strong>Automation</strong>: The GUI supports recording and playback of servo movements, saving sequences to CSV files, and interpolating motions using the Akima spline method for smooth transitions.</li>
-                      <li><strong>Inverse Kinematics (IK)</strong>: A simplified IK solver calculates joint angles to reach a specified 3D target, enhancing precision for tasks requiring specific end-effector positions.</li>
-                    </ul>
-                  </li>
-                  <li><strong>User Interface</strong>: The GUI is split into a control panel (sliders, buttons, and input fields) and a 3D visualization window, with features like loop playback, speed adjustment, and sequence execution.</li>
-                </ul>
-              </li>
-              <li><strong>Technical Highlights</strong>:
-                <ul>
-                  <li><strong>Forward Kinematics</strong>: The software computes joint positions using homogeneous transformation matrices, accounting for rotations around the z-axis (yaw) and y-axis (pitch).</li>
-                  <li><strong>Serial Communication</strong>: Commands are sent to the Arduino via a serial port (e.g., /dev/ttyACM0 at 9600 baud), ensuring reliable servo control.</li>
-                  <li><strong>Error Handling</strong>: The system gracefully handles serial connection failures and invalid inputs, providing user feedback via a status bar.</li>
-                  <li><strong>Modularity</strong>: The code is structured for extensibility, with separate methods for servo control, visualization, and automation.</li>
-                </ul>
-              </li>
-            </ol>
+<!-- Content Section -->
+<section class="content-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 ftco-animate">
+        <h2>6-DOF Robotic Arm with Real-Time Control and 3D Visualization</h2>
 
-            <h4>Skills:</h4>
+        <h4>Overview:</h4>
+        <p>This project features a 6-degree-of-freedom (DOF) robotic arm designed for precise manipulation tasks, controlled via a custom-built graphical user interface (GUI) developed in Python using PyQt6. The arm, powered by six servo motors, is capable of complex movements in a 3D workspace, suitable for applications like pick-and-place tasks, educational robotics, or small-scale automation. The GUI provides intuitive control, real-time 3D visualization, and automation features, demonstrating a blend of mechanical engineering, control systems, and software development.</p>
+
+        <h4>Key Features</h4>
+        <ol>
+          <li><strong>Robotic Arm Hardware</strong>:
             <ul>
-              <li><strong>Python</strong>: Core programming language for GUI and control logic.</li>
-              <li><strong>PyQt6</strong>: Used for developing the graphical user interface.</li>
-              <li><strong>Matplotlib</strong>: For real-time 3D visualization of the arm.</li>
-              <li><strong>NumPy & SciPy</strong>: For kinematics calculations and spline interpolation.</li>
-              <li><strong>Arduino & PCA9685</strong>: Hardware interfacing for servo control.</li>
-              <li><strong>Robotics Engineering</strong>: Design and implementation of 6-DOF arm with forward and inverse kinematics.</li>
+              <li><strong>Structure</strong>: The arm consists of six servo motors mounted on a circular base, with link lengths of 20 mm, 80 mm, 120 mm, 90 mm, 32 mm, and 32 mm, culminating in a forked end effector (likely a gripper).</li>
+              <li><strong>Motion</strong>: The arm achieves 6 DOF through a combination of yaw (servos 0 and 4) and pitch (servos 1, 2, 3, and 5) movements, enabling flexible positioning and orientation in 3D space.</li>
+              <li><strong>Reach</strong>: The arm’s maximum straight-line length is approximately 374 mm, with an effective reach that varies based on joint angles.</li>
+              <li><strong>Design Considerations</strong>: Lightweight materials (e.g., aluminum or composite) reduce servo strain, and the arm likely uses standard hobbyist servos with torque ratings of 10–50 N·cm, suitable for light payloads.</li>
             </ul>
+          </li>
+          <li><strong>Control Software</strong>:
+            <ul>
+              <li><strong>Platform</strong>: Built using Python with PyQt6 for the GUI, interfaced with a microcontroller (e.g., Arduino) via serial communication (PCA9685 servo controller).</li>
+              <li><strong>Functionality</strong>:
+                <ul>
+                  <li><strong>Manual Control</strong>: Users can adjust each servo’s angle (1–179 degrees) using sliders, buttons, or text inputs, with customizable speed and step sizes.</li>
+                  <li><strong>3D Visualization</strong>: A real-time 3D plot, powered by Matplotlib, displays the arm’s configuration, including joint positions, link lengths, and the gripper’s orientation, with adjustable view angles (elevation and azimuth).</li>
+                  <li><strong>Automation</strong>: The GUI supports recording and playback of servo movements, saving sequences to CSV files, and interpolating motions using the Akima spline method for smooth transitions.</li>
+                  <li><strong>Inverse Kinematics (IK)</strong>: A simplified IK solver calculates joint angles to reach a specified 3D target, enhancing precision for tasks requiring specific end-effector positions.</li>
+                </ul>
+              </li>
+              <li><strong>User Interface</strong>: The GUI is split into a control panel (sliders, buttons, and input fields) and a 3D visualization window, with features like loop playback, speed adjustment, and sequence execution.</li>
+            </ul>
+          </li>
+          <li><strong>Technical Highlights</strong>:
+            <ul>
+              <li><strong>Forward Kinematics</strong>: The software computes joint positions using homogeneous transformation matrices, accounting for rotations around the z-axis (yaw) and y-axis (pitch).</li>
+              <li><strong>Serial Communication</strong>: Commands are sent to the Arduino via a serial port (e.g., /dev/ttyACM0 at 9600 baud), ensuring reliable servo control.</li>
+              <li><strong>Error Handling</strong>: The system gracefully handles serial connection failures and invalid inputs, providing user feedback via a status bar.</li>
+              <li><strong>Modularity</strong>: The code is structured for extensibility, with separate methods for servo control, visualization, and automation.</li>
+            </ul>
+          </li>
+        </ol>
 
-            <h4>Visuals:</h4>
-            <section class="ftco-section">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-lg-12 ftco-animate">
-            <div id="projectCarousel" class="carousel slide" data-ride="carousel">
-              <div class="carousel-inner">
-                <!-- Image 1 -->
-                <div class="carousel-item">
-                  <img src="images/6dof_arm.png" class="d-block w-100" alt="Robotic Arm Image 2">
-                  <div class="carousel-caption d-none d-md-block">
+        <h4>Skills:</h4>
+        <ul>
+          <li><strong>Python</strong>: Core programming language for GUI and control logic.</li>
+          <li><strong>PyQt6</strong>: Used for developing the graphical user interface.</li>
+          <li><strong>Matplotlib</strong>: For real-time 3D visualization of the arm.</li>
+          <li><strong>NumPy & SciPy</strong>: For kinematics calculations and spline interpolation.</li>
+          <li><strong>Arduino & PCA9685</strong>: Hardware interfacing for servo control.</li>
+          <li><strong>Robotics Engineering</strong>: Design and implementation of 6-DOF arm with forward and inverse kinematics.</li>
+        </ul>
+
+        <h4>Visuals:</h4>
+        <section class="ftco-section">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-12 ftco-animate">
+                <div id="projectCarousel" class="carousel slide" data-ride="carousel">
+                  <div class="carousel-inner">
+                    <!-- Image 1 (ACTIVE) -->
+                    <div class="carousel-item active">
+                      <img src="images/6dof_arm.png" class="d-block w-100" alt="Robotic Arm Image 1">
+                    </div>
+                    <!-- Image 2 -->
+                    <div class="carousel-item">
+                      <img src="images/6dof_arm_and_me.jpg" class="d-block w-100" alt="Robotic Arm Image 2">
+                    </div>
+                    <!-- Image 3 -->
+                    <div class="carousel-item">
+                      <img src="images/robotic_arm (1).jpeg" class="d-block w-100" alt="Robotic Arm Image 3">
+                    </div>
+                    <!-- Image 4 -->
+                    <div class="carousel-item">
+                      <img src="images/robotic_arm (2).jpeg" class="d-block w-100" alt="Robotic Arm Image 4">
+                    </div>
+                    <!-- Image 5 -->
+                    <div class="carousel-item">
+                      <img src="images/robotic_arm (3).jpeg" class="d-block w-100" alt="Robotic Arm Image 5">
+                    </div>
+                    <!-- Image 6 -->
+                    <div class="carousel-item">
+                      <img src="images/robotic_arm (4).jpeg" class="d-block w-100" alt="Robotic Arm Image 6">
+                    </div>
                   </div>
                 </div>
-                <!-- Image 2 -->
-                <div class="carousel-item">
-                  <img src="images/6dof_arm_and_me.jpg" class="d-block w-100" alt="Robotic Arm Image 2">
-                  <div class="carousel-caption d-none d-md-block">
-                  </div>
-                </div>
-                <!-- Image 3 -->
-                <div class="carousel-item">
-                  <img src="images/robotic_arm (1).jpeg" class="d-block w-100" alt="Robotic Arm Image 3">
-                  <div class="carousel-caption d-none d-md-block">
-                  </div>
-                </div>
-                <!-- Image 4 -->
-                <div class="carousel-item">
-                  <img src="images/robotic_arm (2).jpeg" class="d-block w-100" alt="Robotic Arm Image 4">
-                  <div class="carousel-caption d-none d-md-block">
-                  </div>
-                </div>
-                <!-- Image 4 -->
-                <div class="carousel-item">
-                  <img src="images/robotic_arm (3).jpeg" class="d-block w-100" alt="Robotic Arm Image 4">
-                  <div class="carousel-caption d-none d-md-block">
-                  </div>
-                </div>
-                <!-- Image 4 -->
-                <div class="carousel-item">
-                  <img src="images/robotic_arm (4).jpeg" class="d-block w-100" alt="Robotic Arm Image 4">
-                  <div class="carousel-caption d-none d-md-block">
-                  </div>
-                </div>
-                <!-- Image 4 -->
-                <div class="carousel-item">
-                  <img src="images/robotic_arm (2).jpeg" class="d-block w-100" alt="Robotic Arm Image 4">
-                  <div class="carousel-caption d-none d-md-block">
-                  </div>
-                </div>
+              </div> <!-- .col-lg-12 -->
             </div>
-          </div> <!-- .col-lg-12 -->
-        </div>
-      </div>
-    </section>
-            <h4>What’s Next?</h4>
-            <p>Future improvements could include adding force feedback, optimizing IK for speed, or integrating computer vision for enhanced automation.</p>
           </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery-migrate-3.0.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.easing.1.3.js"></script>
-    <script src="js/jquery.waypoints.min.js"></script>
-    <script src="js/jquery.stellar.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <script src="js/aos.js"></script>
-    <script src="js/jquery.animateNumber.min.js"></script>
-    <script src="js/scrollax.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-      const ctx = document.getElementById('servoChart').getContext('2d');
-      const servoChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ['0ms', '500ms', '1000ms', '1500ms', '2000ms'],
-          datasets: [
-            {
-              label: 'Servo 0 (Yaw)',
-              data: [95, 100, 110, 100, 95],
-              borderColor: '#FF6F61',
-              backgroundColor: 'rgba(255, 111, 97, 0.2)',
-              fill: false
-            },
-            {
-              label: 'Servo 1 (Pitch)',
-              data: [149, 145, 140, 145, 149],
-              borderColor: '#6B7280',
-              backgroundColor: 'rgba(107, 114, 128, 0.2)',
-              fill: false
-            },
-            {
-              label: 'Servo 2 (Pitch)',
-              data: [84, 85, 90, 85, 84],
-              borderColor: '#10B981',
-              backgroundColor: 'rgba(16, 185, 129, 0.2)',
-              fill: false
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top'
-            },
-            title: {
-              display: true,
-              text: 'Servo Angles During Playback Sequence'
-            }
+        <h4>What’s Next?</h4>
+        <p>Computer Vision Integration, Vision Language Action integration, Autonomous Pollination and more.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-migrate-3.0.1.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.easing.1.3.js"></script>
+<script src="js/jquery.waypoints.min.js"></script>
+<script src="js/jquery.stellar.min.js"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/jquery.magnific-popup.min.js"></script>
+<script src="js/aos.js"></script>
+<script src="js/jquery.animateNumber.min.js"></script>
+<script src="js/scrollax.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('servoChart')?.getContext('2d');
+  if (ctx) {
+    const servoChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['0ms', '500ms', '1000ms', '1500ms', '2000ms'],
+        datasets: [
+          {
+            label: 'Servo 0 (Yaw)',
+            data: [95, 100, 110, 100, 95],
+            borderColor: '#FF6F61',
+            backgroundColor: 'rgba(255, 111, 97, 0.2)',
+            fill: false
           },
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: 'Time (ms)'
-              }
-            },
-            y: {
-              title: {
-                display: true,
-                text: 'Angle (degrees)'
-              },
-              min: 0,
-              max: 180
-            }
+          {
+            label: 'Servo 1 (Pitch)',
+            data: [149, 145, 140, 145, 149],
+            borderColor: '#6B7280',
+            backgroundColor: 'rgba(107, 114, 128, 0.2)',
+            fill: false
+          },
+          {
+            label: 'Servo 2 (Pitch)',
+            data: [84, 85, 90, 85, 84],
+            borderColor: '#10B981',
+            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top' },
+          title: { display: true, text: 'Servo Angles During Playback Sequence' }
+        },
+        scales: {
+          x: { title: { display: true, text: 'Time (ms)' } },
+          y: {
+            title: { display: true, text: 'Angle (degrees)' },
+            min: 0,
+            max: 180
           }
         }
-      });
-    </script>
-    <script src="js/main.js"></script>
-    
+      }
+    });
+  }
+</script>
+<script src="js/main.js"></script>
+
   </body>
 </html>
