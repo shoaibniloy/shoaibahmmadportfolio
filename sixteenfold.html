@@ -105,7 +105,52 @@
             <h4>Overview:</h4>
             <p>This project features a 6-degree-of-freedom (DOF) robotic arm designed for precise manipulation tasks, controlled via a custom-built graphical user interface (GUI) developed in Python using PyQt6. The arm, powered by six servo motors, is capable of complex movements in a 3D workspace, suitable for applications like pick-and-place tasks, educational robotics, or small-scale automation. The GUI provides intuitive control, real-time 3D visualization, and automation features, demonstrating a blend of mechanical engineering, control systems, and software development.</p>
             <!-- Image Carousel Section -->
-    <section class="ftco-section">
+            <h4>Key Features</h4>
+            <ol>
+              <li><strong>Robotic Arm Hardware</strong>:
+                <ul>
+                  <li><strong>Structure</strong>: The arm consists of six servo motors mounted on a circular base, with link lengths of 20 mm, 80 mm, 120 mm, 90 mm, 32 mm, and 32 mm, culminating in a forked end effector (likely a gripper).</li>
+                  <li><strong>Motion</strong>: The arm achieves 6 DOF through a combination of yaw (servos 0 and 4) and pitch (servos 1, 2, 3, and 5) movements, enabling flexible positioning and orientation in 3D space.</li>
+                  <li><strong>Reach</strong>: The arm’s maximum straight-line length is approximately 374 mm, with an effective reach that varies based on joint angles.</li>
+                  <li><strong>Design Considerations</strong>: Lightweight materials (e.g., aluminum or composite) reduce servo strain, and the arm likely uses standard hobbyist servos with torque ratings of 10–50 N·cm, suitable for light payloads.</li>
+                </ul>
+              </li>
+              <li><strong>Control Software</strong>:
+                <ul>
+                  <li><strong>Platform</strong>: Built using Python with PyQt6 for the GUI, interfaced with a microcontroller (e.g., Arduino) via serial communication (PCA9685 servo controller).</li>
+                  <li><strong>Functionality</strong>:
+                    <ul>
+                      <li><strong>Manual Control</strong>: Users can adjust each servo’s angle (1–179 degrees) using sliders, buttons, or text inputs, with customizable speed and step sizes.</li>
+                      <li><strong>3D Visualization</strong>: A real-time 3D plot, powered by Matplotlib, displays the arm’s configuration, including joint positions, link lengths, and the gripper’s orientation, with adjustable view angles (elevation and azimuth).</li>
+                      <li><strong>Automation</strong>: The GUI supports recording and playback of servo movements, saving sequences to CSV files, and interpolating motions using the Akima spline method for smooth transitions.</li>
+                      <li><strong>Inverse Kinematics (IK)</strong>: A simplified IK solver calculates joint angles to reach a specified 3D target, enhancing precision for tasks requiring specific end-effector positions.</li>
+                    </ul>
+                  </li>
+                  <li><strong>User Interface</strong>: The GUI is split into a control panel (sliders, buttons, and input fields) and a 3D visualization window, with features like loop playback, speed adjustment, and sequence execution.</li>
+                </ul>
+              </li>
+              <li><strong>Technical Highlights</strong>:
+                <ul>
+                  <li><strong>Forward Kinematics</strong>: The software computes joint positions using homogeneous transformation matrices, accounting for rotations around the z-axis (yaw) and y-axis (pitch).</li>
+                  <li><strong>Serial Communication</strong>: Commands are sent to the Arduino via a serial port (e.g., /dev/ttyACM0 at 9600 baud), ensuring reliable servo control.</li>
+                  <li><strong>Error Handling</strong>: The system gracefully handles serial connection failures and invalid inputs, providing user feedback via a status bar.</li>
+                  <li><strong>Modularity</strong>: The code is structured for extensibility, with separate methods for servo control, visualization, and automation.</li>
+                </ul>
+              </li>
+            </ol>
+
+            <h4>Skills:</h4>
+            <ul>
+              <li><strong>Python</strong>: Core programming language for GUI and control logic.</li>
+              <li><strong>PyQt6</strong>: Used for developing the graphical user interface.</li>
+              <li><strong>Matplotlib</strong>: For real-time 3D visualization of the arm.</li>
+              <li><strong>NumPy & SciPy</strong>: For kinematics calculations and spline interpolation.</li>
+              <li><strong>Arduino & PCA9685</strong>: Hardware interfacing for servo control.</li>
+              <li><strong>Robotics Engineering</strong>: Design and implementation of 6-DOF arm with forward and inverse kinematics.</li>
+            </ul>
+
+            <h4>Visuals:</h4>
+            <section class="ftco-section">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-12 ftco-animate">
@@ -158,55 +203,6 @@
         </div>
       </div>
     </section>
-            <h4>Key Features</h4>
-            <ol>
-              <li><strong>Robotic Arm Hardware</strong>:
-                <ul>
-                  <li><strong>Structure</strong>: The arm consists of six servo motors mounted on a circular base, with link lengths of 20 mm, 80 mm, 120 mm, 90 mm, 32 mm, and 32 mm, culminating in a forked end effector (likely a gripper).</li>
-                  <li><strong>Motion</strong>: The arm achieves 6 DOF through a combination of yaw (servos 0 and 4) and pitch (servos 1, 2, 3, and 5) movements, enabling flexible positioning and orientation in 3D space.</li>
-                  <li><strong>Reach</strong>: The arm’s maximum straight-line length is approximately 374 mm, with an effective reach that varies based on joint angles.</li>
-                  <li><strong>Design Considerations</strong>: Lightweight materials (e.g., aluminum or composite) reduce servo strain, and the arm likely uses standard hobbyist servos with torque ratings of 10–50 N·cm, suitable for light payloads.</li>
-                </ul>
-              </li>
-              <li><strong>Control Software</strong>:
-                <ul>
-                  <li><strong>Platform</strong>: Built using Python with PyQt6 for the GUI, interfaced with a microcontroller (e.g., Arduino) via serial communication (PCA9685 servo controller).</li>
-                  <li><strong>Functionality</strong>:
-                    <ul>
-                      <li><strong>Manual Control</strong>: Users can adjust each servo’s angle (1–179 degrees) using sliders, buttons, or text inputs, with customizable speed and step sizes.</li>
-                      <li><strong>3D Visualization</strong>: A real-time 3D plot, powered by Matplotlib, displays the arm’s configuration, including joint positions, link lengths, and the gripper’s orientation, with adjustable view angles (elevation and azimuth).</li>
-                      <li><strong>Automation</strong>: The GUI supports recording and playback of servo movements, saving sequences to CSV files, and interpolating motions using the Akima spline method for smooth transitions.</li>
-                      <li><strong>Inverse Kinematics (IK)</strong>: A simplified IK solver calculates joint angles to reach a specified 3D target, enhancing precision for tasks requiring specific end-effector positions.</li>
-                    </ul>
-                  </li>
-                  <li><strong>User Interface</strong>: The GUI is split into a control panel (sliders, buttons, and input fields) and a 3D visualization window, with features like loop playback, speed adjustment, and sequence execution.</li>
-                </ul>
-              </li>
-              <li><strong>Technical Highlights</strong>:
-                <ul>
-                  <li><strong>Forward Kinematics</strong>: The software computes joint positions using homogeneous transformation matrices, accounting for rotations around the z-axis (yaw) and y-axis (pitch).</li>
-                  <li><strong>Serial Communication</strong>: Commands are sent to the Arduino via a serial port (e.g., /dev/ttyACM0 at 9600 baud), ensuring reliable servo control.</li>
-                  <li><strong>Error Handling</strong>: The system gracefully handles serial connection failures and invalid inputs, providing user feedback via a status bar.</li>
-                  <li><strong>Modularity</strong>: The code is structured for extensibility, with separate methods for servo control, visualization, and automation.</li>
-                </ul>
-              </li>
-            </ol>
-
-            <h4>Skills:</h4>
-            <ul>
-              <li><strong>Python</strong>: Core programming language for GUI and control logic.</li>
-              <li><strong>PyQt6</strong>: Used for developing the graphical user interface.</li>
-              <li><strong>Matplotlib</strong>: For real-time 3D visualization of the arm.</li>
-              <li><strong>NumPy & SciPy</strong>: For kinematics calculations and spline interpolation.</li>
-              <li><strong>Arduino & PCA9685</strong>: Hardware interfacing for servo control.</li>
-              <li><strong>Robotics Engineering</strong>: Design and implementation of 6-DOF arm with forward and inverse kinematics.</li>
-            </ul>
-
-            <h4>Visuals:</h4>
-            <div class="project-visuals">
-              <img src="images/robotic-arm-diagram.png" alt="Diagram of 6-DOF robotic arm">
-              <video src="images/arm-demo.mp4" controls loop alt="Demo video of robotic arm in action"></video>
-            </div>
             <h4>What’s Next?</h4>
             <p>Future improvements could include adding force feedback, optimizing IK for speed, or integrating computer vision for enhanced automation.</p>
           </div>
