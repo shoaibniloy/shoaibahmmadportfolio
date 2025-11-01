@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Autonomous Pollination System</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Bootstrap 4 CSS (added previously) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css/aos.css">
+    <link rel="stylesheet" href="css/ionicons.min.css">
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+      /* Remove margin and padding between sections */
+      .ftco-section {
+        margin: 0 !important; /* Ensure no margin */
+        padding: 0 !important; /* Remove padding */
+      }
+
+      .carousel {
+        margin-bottom: 0 !important; /* Remove bottom margin for the carousel */
+      }
+
+      .container {
+        padding: 0 !important; /* Remove all padding */
+      }
+
+      /* Ensure hero section doesn't add margin */
+      .hero-wrap {
+        margin-top: 0 !important; /* Remove margin from hero section */
+        padding-top: 0 !important; /* Remove padding from hero section */
+      }
+
+      /* Specific styling for content */
+      .content-section {
+        padding: 20px; /* Add padding to the content */
+        font-family: Poppins, sans-serif;
+      }
+
+      .content-section h2, .content-section h4 {
+        margin-top: 10px;
+      }
+
+      .content-section p, .content-section ul {
+        margin-bottom: 15px;
+      }
+
+      .project-visuals {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+      }
+
+      .project-visuals img, .project-visuals video {
+        width: 45%;
+        max-width: 400px;
+      }
+
+      .chart-container {
+        margin: 20px 0;
+        text-align: center;
+      }
+
+      .chart-container canvas {
+        max-width: 100%;
+        height: auto;
+      }
+
+      /* ---- Prevent carousel image cropping & allow full view ---- */
+      #projectCarousel .carousel-item {
+        background: #000;            /* subtle letterboxing behind images */
+        text-align: center;          /* center inline images */
+      }
+      #projectCarousel .carousel-item img {
+        width: 100%;
+        height: auto;                /* keep natural aspect ratio */
+        max-height: 80vh;            /* keep within viewport height */
+        object-fit: contain;         /* never crop */
+        display: inline-block;       /* allow text-align center to work */
+      }
+    </style>
+  </head>
+  <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+    
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light site-navbar-target" id="ftco-navbar">
+      <div class="container">
+          <a class="navbar-brand red-text" href="index.html">Go Back</a>
+          <div class="collapse navbar-collapse" id="ftco-nav">
+          </div>
+      </div>
+    </nav>  
+<!-- Video Section -->
+<section class="ftco-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-12 ftco-animate">
+        <div class="embed-responsive embed-responsive-16by9">
+          <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/kFZPzB-u_s8" title="Autonomous Pollination Robots Demo Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+      </div> <!-- .col-lg-12 -->
+    </div>
+  </div>
+</section>
+    <!-- Content Section -->
+    <section class="content-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 ftco-animate">
+            <h2>Autonomous Pollination System</h2>
+
+            <h4>Overview:</h4>
+            <p>This project implements a control system for a 6-degree-of-freedom (6-DoF) robotic arm designed for autonomous pollination of flowers, such as yellow apples. It integrates computer vision for detection, inverse kinematics for arm control, and a PyQt6-based GUI for visualization and interaction. The system uses a camera to detect flowers, estimates their 3D positions, and performs pollination actions like approaching, contacting with a cotton bud extender, and retracting. It supports manual servo control, motion recording/playback, virtual simulations, and physical hardware execution via Arduino.</p>
+            <!-- Image Carousel Section -->
+            <h4>Features</h4>
+            <ol>
+              <li><strong>Flower Detection & Tracking</strong>:
+                <ul>
+                  <li><strong>YOLOv8</strong> model (yello_apple.pt) for real-time detection with confidence threshold 0.35.</li>
+                  <li><strong>DeepSort-like tracking</strong> using IoU and Kalman filters for robust multi-object tracking.</li>
+                  <li><strong>Depth Estimation</strong> via polynomial regression from area pixels to distance (cm), with lens distortion correction.</li>
+                  <li><strong>3D Deprojection</strong> using camera intrinsics for world coordinates.</li>
+                </ul>
+              </li>
+              <li><strong>Robotic Arm Control</strong>:
+                <ul>
+                  <li><strong>6 Servos</strong> controlled via Arduino (serial on /dev/ttyACM0).</li>
+                  <li><strong>Servo Limits & Rates</strong> enforced for safe operation (e.g., base: 30.54–161.85°).</li>
+                  <li><strong>Manual Controls</strong>: Sliders, increment/decrement buttons, speed/step adjustments.</li>
+                  <li><strong>EKF Smoothing</strong> for jitter-free angle transitions.</li>
+                </ul>
+              </li>
+              <li><strong>Kinematics & Optimization</strong>:
+                <ul>
+                  <li><strong>Forward Kinematics (FK)</strong> for 3D visualization using Torch.</li>
+                  <li><strong>Inverse Kinematics (IK)</strong> solved via Particle Swarm Optimization (PSO) for target reaching.</li>
+                  <li><strong>Path Planning</strong>: Smooth interpolation with rate-based timing; auto-pollination queues targets.</li>
+                </ul>
+              </li>
+              <li><strong>Interactive GUI (PyQt6)</strong>:
+                <ul>
+                  <li>Real-time video feed with annotations.</li>
+                  <li>3D Matplotlib visualization of arm, camera FOV cone, detections, and targets.</li>
+                  <li>IK controls: Target position sliders, compute/move buttons.</li>
+                  <li>Tracking modes: Virtual/physical, auto-pollination (virtual/physical).</li>
+                  <li>Recording: Capture/replay motions as CSV; playback with Akima interpolation.</li>
+                  <li>Themes: Dark/light mode toggle.</li>
+                </ul>
+              </li>
+              <li><strong>Autonomous Modes</strong>:
+                <ul>
+                  <li><strong>Auto-Pollination</strong>: Sequences targets, approaches with cotton bud, pauses, retracts to preferred pose.</li>
+                  <li><strong>Detection Management</strong>: Plot/clear detections, convert to targets.</li>
+                </ul>
+              </li>
+              <li><strong>Extras</strong>:
+                <ul>
+                  <li><strong>CUDA Support</strong>: Checks for GPU, falls back to CPU.</li>
+                  <li><strong>Concurrency</strong>: Threads for video processing, PSO, timers for animations.</li>
+                </ul>
+              </li>
+            </ol>
+
+            <h4>Project Visuals</h4>
+            <div class="project-visuals">
+              <img src="https://media.wired.com/photos/5b04581d4540814303aed7e8/4:3/w_2400,h_1800,c_limit/pollinator.png" alt="Robotic Pollinator from WIRED">
+              <img src="https://www.asme.org/getmedia/87e33fbd-2730-47fb-9c93-4351f58d039e/Pollinator-Hero.jpg?width=854&height=480&ext=.jpg" alt="Six-Armed Robot Pollinator from ASME">
+              <img src="https://scx2.b-cdn.net/gfx/news/hires/2018/bramblebeean.jpg" alt="BrambleBee Autonomous Robot">
+              <img src="https://www.researchgate.net/publication/338938559/figure/fig1/AS:11431281182535912@1692383399518/Experimental-setup-featuring-the-robotic-arm-with-attached-end-effector-and-depth-camera.jpg" alt="Experimental Setup from ResearchGate">
+            </div>
+
+            <h4>Requirements:</h4>
+            <h5>Software:</h5>
+            <ul>
+              <li>Python 3.12+</li>
+              <li>Libraries: sys, serial, time, os, csv, numpy, torch, scipy, PyQt6, cv2 (OpenCV), ultralytics (YOLO), sklearn, pandas, matplotlib.</li>
+            </ul>
+            <h5>Hardware (optional):</h5>
+            <ul>
+              <li>Arduino board with 6 servos.</li>
+              <li>USB camera (index 0).</li>
+              <li>40mm cotton bud extender on gripper.</li>
+            </ul>
+            <h5>Model:</h5>
+            <ul>
+              <li>Pre-trained YOLOv8 model (yello_apple.pt).</li>
+              <li>Calibration CSV (interpolated_calibration_data.csv).</li>
+            </ul>
+
+            <h4>Installation:</h4>
+            <p>The project repository is not publicly available on GitHub as of November 2025. Contact the author (Shoaib) for access. Once obtained:</p>
+            <pre>
+              cd Autonomous-Pollination-System
+            </pre>
+            <p>Install dependencies:</p>
+            <pre>
+              pip install numpy torch scipy PyQt6 opencv-python ultralytics scikit-learn pandas matplotlib
+            </pre>
+
+            <h4>Usage:</h4>
+            <pre>
+              python autonomous_pollination_v4.py
+            </pre>
+            <p>The GUI will launch, allowing manual servo control, IK computation, real-time detection, and autonomous pollination modes. Connect Arduino to /dev/ttyACM0 for physical control.</p>
+
+            <h4>What’s Next?</h4>
+            <p>Future enhancements could include analytical IK fallback, GPU-accelerated YOLO, collision avoidance, LLM integration for planning, unit tests, and multi-arm support.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.1.3.js"></script>
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.stellar.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/jquery.animateNumber.min.js"></script>
+    <script src="js/scrollax.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
