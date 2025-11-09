@@ -628,4 +628,44 @@ function openFullscreen(img) {
   });
 
 
+
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+
+  function showSlide(n) {
+    currentSlide = (n + totalSlides) % totalSlides;
+    document.getElementById('imageSlider').style.transform = `translateX(-${currentSlide * 100}%)`;
+  }
+
+  function moveSlide(direction) {
+    showSlide(currentSlide + direction);
+  }
+
+  // Lightbox (same as before)
+  let lightboxIndex = 0;
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImage');
+
+  function openLightbox(index) {
+    lightboxIndex = index;
+    lightboxImg.src = slides[index].querySelector('img').src;
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+
+  function changeLightboxImage(direction) {
+    lightboxIndex = (lightboxIndex + direction + totalSlides) % totalSlides;
+    lightboxImg.src = slides[lightboxIndex].querySelector('img').src;
+  }
+
+  // Initialize
+  showSlide(0);
+
+
   
