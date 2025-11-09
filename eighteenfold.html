@@ -1,96 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Autonomous Pollination with 3D Printed Robotic Arm and a Monocular Camera (Webcam)</title>
+    <title>Autonomous Pollination with 3D Printed Robotic Arm and Monocular Vision</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
     <!-- Bootstrap 4 CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
-    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" rel="stylesheet">
+    
     <style>
-      /* Remove margin and padding between sections */
-      .ftco-section {
-        margin: 0 !important;
-        padding: 0 !important;
+      :root {
+        --bg-primary: #0d0d0d;
+        --bg-secondary: #111111;
+        --text-primary: #f5f5f5;
+        --text-secondary: #cccccc;
+        --accent-red: #e53935;
+        --accent-red-dark: #c62828;
+        --border-color: #333333;
+        --highlight-bg: #1a1a1a;
       }
 
-      .carousel {
-        margin-bottom: 0 !important;
+      body {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.8;
       }
 
-      .container {
-        padding: 0 !important;
+      .ftco-section, .content-section {
+        background-color: var(--bg-primary);
+        margin: 0;
+        padding: 0;
       }
 
-      .hero-wrap {
-        margin-top: 0 !important;
-        padding-top: 0 !important;
+      .navbar {
+        background-color: var(--bg-secondary) !important;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .navbar-brand {
+        color: var(--accent-red) !important;
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+
+      .navbar-brand:hover {
+        color: #ff6b6b !important;
       }
 
       .content-section {
-        padding: 20px;
-        font-family: Poppins, sans-serif;
-        line-height: 1.8;
-        font-size: 1.05rem;
+        padding: 30px 20px;
       }
 
-      .content-section h2, .content-section h4, .content-section h5, .content-section h6 {
-        margin-top: 28px;
-        margin-bottom: 14px;
+      h2, h4, h5, h6 {
+        color: var(--accent-red);
         font-weight: 600;
+        margin-top: 30px;
+        margin-bottom: 16px;
       }
 
-      .content-section p, .content-section ul {
+      h2 {
+        font-size: 2.2rem;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .lead {
+        color: var(--text-secondary);
+        text-align: center;
+        font-size: 1.15rem;
+        margin-bottom: 30px;
+      }
+
+      p, ul, ol {
+        color: var(--text-primary);
         margin-bottom: 18px;
       }
 
-      .content-section ul ul {
-        margin-bottom: 10px;
+      ul, ol {
+        padding-left: 20px;
       }
 
-      .project-visuals {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 14px;
-        justify-content: center;
-        margin: 30px 0;
-      }
-
-      .project-visuals img {
-        width: 48%;
-        max-width: 520px;
-        border-radius: 14px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.16);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-
-      .project-visuals img:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 14px 28px rgba(0,0,0,0.25);
-      }
-
-      #projectCarousel .carousel-item {
-        background: #000;
-        text-align: center;
-      }
-      #projectCarousel .carousel-item img {
-        width: 100%;
-        height: auto;
-        max-height: 82vh;
-        object-fit: contain;
-        display: inline-block;
-      }
-
-      .carousel-control-prev-icon,
-      .carousel-control-next-icon {
-        background-color: rgba(0,0,0,0.6);
-        border-radius: 50%;
-        width: 55px;
-        height: 55px;
+      .section-divider {
+        height: 1px;
+        background: linear-gradient(to right, transparent, var(--border-color), transparent);
+        margin: 50px 0;
       }
 
       .video-container {
@@ -98,9 +94,10 @@
         padding-bottom: 56.25%;
         height: 0;
         overflow: hidden;
-        border-radius: 18px;
-        box-shadow: 0 12px 36px rgba(0,0,0,0.22);
-        margin: 35px 0;
+        border-radius: 12px;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+        margin: 40px 0;
+        border: 2px solid var(--accent-red);
       }
 
       .video-container iframe {
@@ -112,71 +109,212 @@
         border: 0;
       }
 
-      .highlight {
-        background: linear-gradient(120deg, #fff9c4 0%, #fff9c4 100%);
-        padding: 3px 7px;
-        border-radius: 5px;
-        font-weight: 600;
-      }
-
       .tech-tag {
         display: inline-block;
-        background: #e8f5e9;
-        color: #2e7d32;
-        padding: 5px 12px;
-        border-radius: 22px;
+        background: rgba(229, 57, 53, 0.15);
+        color: var(--accent-red);
+        padding: 6px 14px;
+        border-radius: 25px;
         font-size: 0.88rem;
-        margin: 5px 7px 5px 0;
+        margin: 6px 8px 6px 0;
         font-weight: 500;
-      }
-
-      .section-divider {
-        height: 1px;
-        background: linear-gradient(to right, transparent, #ccc, transparent);
-        margin: 45px 0;
+        border: 1px solid rgba(229, 57, 53, 0.3);
       }
 
       .katex-display {
-        margin: 20px 0;
+        margin: 22px 0;
         overflow-x: auto;
-        overflow-y: hidden;
+        padding: 12px 0;
+        background: var(--highlight-bg);
+        border-radius: 8px;
+        border-left: 4px solid var(--accent-red);
       }
 
       .code-block {
-        background: #f5f5f5;
-        border: 1px solid #ddd;
+        background: var(--highlight-bg);
+        border: 1px solid var(--border-color);
+        border-left: 4px solid var(--accent-red);
         border-radius: 8px;
-        padding: 12px 16px;
+        padding: 14px 18px;
         font-family: 'Courier New', monospace;
         font-size: 0.92rem;
         overflow-x: auto;
-        margin: 18px 0;
+        margin: 20px 0;
+        color: #ffdddd;
       }
 
-      .fig-caption {
-        font-size: 0.9rem;
-        color: #555;
-        text-align: center;
-        margin-top: 8px;
+      /* Image Slider */
+      .image-slider {
+        margin: 50px 0;
+      }
+
+      .slider-container {
+        position: relative;
+        max-width: 100%;
+        margin: auto;
+        overflow: hidden;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        border: 1px solid var(--border-color);
+      }
+
+      .slider {
+        display: flex;
+        transition: transform 0.5s ease;
+      }
+
+      .slide {
+        min-width: 100%;
+        position: relative;
+      }
+
+      .slide img {
+        width: 100%;
+        height: auto;
+        max-height: 65vh;
+        object-fit: contain;
+        display: block;
+        cursor: pointer;
+        filter: brightness(0.92);
+        transition: filter 0.3s;
+      }
+
+      .slide img:hover {
+        filter: brightness(1.05);
+      }
+
+      .slide-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(13,13,13,0.9));
+        color: #fff;
+        padding: 20px 15px 12px;
+        font-size: 0.95rem;
         font-style: italic;
+      }
+
+      .slider-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0,0,0,0.6);
+        color: white;
+        border: none;
+        width: 50px;
+        height: 50px;
+        font-size: 1.8rem;
+        cursor: pointer;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        transition: all 0.3s;
+      }
+
+      .slider-nav:hover {
+        background: var(--accent-red);
+        transform: translateY(-50%) scale(1.1);
+      }
+
+      .prev-btn { left: 15px; }
+      .next-btn { right: 15px; }
+
+      /* Lightbox */
+      .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.95);
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      .lightbox.active {
+        display: flex;
+      }
+
+      .lightbox img {
+        max-width: 95%;
+        max-height: 90vh;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 0 40px rgba(0,0,0,0.8);
+      }
+
+      .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(229, 57, 53, 0.8);
+        color: white;
+        border: none;
+        width: 60px;
+        height: 60px;
+        font-size: 2.2rem;
+        cursor: pointer;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1001;
+        transition: all 0.3s;
+      }
+
+      .lightbox-nav:hover {
+        background: var(--accent-red);
+        transform: translateY(-50%) scale(1.15);
+      }
+
+      .lightbox-prev { left: 30px; }
+      .lightbox-next { right: 30px; }
+
+      .lightbox-close {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        background: rgba(229, 57, 53, 0.8);
+        color: white;
+        border: none;
+        width: 50px;
+        height: 50px;
+        font-size: 1.8rem;
+        cursor: pointer;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1001;
+        transition: all 0.3s;
+      }
+
+      .lightbox-close:hover {
+        background: #c62828;
+        transform: scale(1.1);
       }
     </style>
   </head>
-  <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
-    
+  <body>
+
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light site-navbar-target" id="ftco-navbar">
       <div class="container">
-          <a class="navbar-brand red-text" href="index.html">Go Back</a>
-          <div class="collapse navbar-collapse" id="ftco-nav">
-          </div>
+          <a class="navbar-brand" href="index.html">Go Back</a>
       </div>
     </nav>  
 
-    <!-- Hero Video Section -->
+    <!-- Hero Video -->
     <section class="ftco-section">
       <div class="container">
         <div class="row justify-content-center">
-          <div class="col-lg-12 ftco-animate">
+          <div class="col-lg-12">
             <div class="video-container">
               <iframe src="https://www.youtube.com/embed/w8g6eLM7Erg" title="Autonomous Pollination System - Full Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
             </div>
@@ -185,13 +323,13 @@
       </div>
     </section>
 
-    <!-- Main Content Section -->
+    <!-- Main Content -->
     <section class="content-section">
       <div class="container">
         <div class="row">
-          <div class="col-lg-12 ftco-animate">
-            <h2 class="text-center">Autonomous Pollination with 3D Printed 6-DoF Robotic Arm and Monocular Vision</h2>
-            <p class="lead text-center">A high-precision, low-cost pollination robot using <strong>real-time 3D pose estimation</strong>, <strong>constrained PSO inverse kinematics</strong>, and <strong>EKF-smoothed servo control</strong> — achieving sub-centimeter accuracy with a single webcam and no external sensors.</p>
+          <div class="col-lg-12">
+            <h2>Autonomous Pollination with 3D Printed 6-DoF Robotic Arm and Monocular Vision</h2>
+            <p class="lead">A high-precision, low-cost pollination robot using <strong>real-time 3D pose estimation</strong>, <strong>constrained PSO inverse kinematics</strong>, and <strong>EKF-smoothed servo control</strong> — achieving sub-centimeter accuracy with a single webcam and no external sensors.</p>
 
             <div class="section-divider"></div>
 
@@ -219,8 +357,8 @@
 
             <h5>2. Multi-Object Tracking with Kalman Filter</h5>
             <p>Each track maintains a 9-state vector:</p>
-            <div class="code-block">
-              \[\mathbf{x} = [x, y, a, \dot{x}, \dot{y}, \dot{a}, \ddot{x}, \ddot{y}, \ddot{a}]^T\]
+            <div class="katex-display">
+              \[\mathbf{x} = \begin{bmatrix} x \\ y \\ a \\ \dot{x} \\ \dot{y} \\ \dot{a} \\ \ddot{x} \\ \ddot{y} \\ \ddot{a} \end{bmatrix}\]
             </div>
             <ul>
               <li><strong>State Transition</strong>: Constant acceleration model (dt = 1/30s)</li>
@@ -232,17 +370,17 @@
             <h5>3. Monocular 3D Localization</h5>
             <p>Depth estimated via calibrated area-to-distance mapping:</p>
             <div class="katex-display">
-              \[ d = a_2 \cdot a^2 + a_1 \cdot a + a_0 \]
+              \[ d = a_2 a^2 + a_1 a + a_0 \]
             </div>
             <ul>
               <li><strong>Calibration</strong>: 150 samples at known distances (200–800mm)</li>
               <li><strong>Coefficients</strong>: \(a_2 = -1.203 \times 10^{-6}\), \(a_1 = 0.00187\), \(a_0 = 712.4\)</li>
               <li><strong>Radial Correction</strong>: 
                 \[
-                x_c = \frac{x - c_x}{f_x}, \quad y_c = \frac{y - c_y}{f_y}
+                x_c = \frac{x - c_x}{f_x}, \quad y_c = \frac{y - c_y}{f_y}, \quad r = \sqrt{x_c^2 + y_c^2}
                 \]
                 \[
-                r = \sqrt{x_c^2 + y_c^2}, \quad \text{scale} = 1 + k_1 r^2 + k_2 r^4
+                \text{scale} = 1 + k_1 r^2 + k_2 r^4
                 \]
               </li>
               <li><strong>Deprojection</strong>: 
@@ -259,14 +397,14 @@
             <h5>Forward Kinematics (DH Parameters)</h5>
             <p>6-DoF arm with non-standard joint offsets. Transformation from base to tip:</p>
             <div class="code-block">
-              T = T₁(θ₁) ⋅ T₂(θ₂) ⋅ T₃(θ₃) ⋅ T₄(θ₄) ⋅ T₅(θ₅) ⋅ T₆(θ₆) ⋅ Tₑₓₜ
+              T = T_1(\theta_1) \cdot T_2(\theta_2) \cdot T_3(\theta_3) \cdot T_4(\theta_4) \cdot T_5(\theta_5) \cdot T_6(\theta_6) \cdot T_{\text{ext}}
             </div>
-            <p>Where \(Tₑₓₜ\) includes 40mm cotton bud along gripper centerline.</p>
+            <p>Where \(T_{\text{ext}}\) includes 40mm cotton bud along gripper centerline.</p>
 
             <h5>Inverse Kinematics via Constrained PSO</h5>
             <p>Objective: Minimize end-effector error with direction alignment:</p>
             <div class="katex-display">
-              \[ f(\theta) = w_p \| \mathbf{p}_t - \mathbf{p}(\theta) \|_2 + w_d (1 - \hat{\mathbf{d}}_t \cdot \hat{\mathbf{d}}(\theta)) + w_r \|\theta - \theta_{\text{pref}}\|_2 \]
+              \[ f(\theta) = w_p \|\mathbf{p}_t - \mathbf{p}(\theta)\|_2 + w_d (1 - \hat{\mathbf{d}}_t \cdot \hat{\mathbf{d}}(\theta)) + w_r \|\theta - \theta_{\text{pref}}\|_2 \]
             </div>
             <ul>
               <li><strong>Particles</strong>: 30, inertia decay 0.99 → 0.4</li>
@@ -278,7 +416,9 @@
             <h5>Servo Control with EKF</h5>
             <p>Each servo runs an independent EKF:</p>
             <div class="katex-display">
-              \mathbf{x} = [\theta, \dot{\theta}]^T, \quad \mathbf{F} = \begin{bmatrix} 1 & dt \\ 0 & 1 \end{bmatrix}, \quad \mathbf{Q} = \begin{bmatrix} 0.001 & 0 \\ 0 & 0.001 \end{bmatrix}
+              \mathbf{x} = \begin{bmatrix} \theta \\ \dot{\theta} \end{bmatrix}, \quad
+              \mathbf{F} = \begin{bmatrix} 1 & \Delta t \\ 0 & 1 \end{bmatrix}, \quad
+              \mathbf{Q} = \begin{bmatrix} 0.001 & 0 \\ 0 & 0.001 \end{bmatrix}
             </div>
             <ul>
               <li><strong>Measurement</strong>: Direct angle from Arduino (noisy)</li>
@@ -311,73 +451,55 @@
 
             <div class="section-divider"></div>
 
-            <h4>Project Visuals</h4>
-            <div class="project-visuals">
-              <div>
-                <img src="pollination (1).png" alt="Complete GUI with 3D arm, live video, and control panels">
-                <p class="fig-caption">Figure 1: Full system dashboard with real-time 3D visualization and servo controls</p>
-              </div>
-              <div>
-                <img src="pollination (2).png" alt="YOLOv8 detection with bounding boxes and confidence scores">
-                <p class="fig-caption">Figure 2: Real-time flower detection with confidence filtering</p>
-              </div>
-              <div>
-                <img src="pollination (3).png" alt="3D scene showing camera FOV, arm pose, and target alignment">
-                <p class="fig-caption">Figure 3: 3D visualization with camera frustum and approach vector</p>
-              </div>
-              <div>
-                <img src="pollination (4).png" alt="Inverse kinematics panel with PSO solver and constraints">
-                <p class="fig-caption">Figure 4: IK solver interface with direction and position constraints</p>
-              </div>
-              <div>
-                <img src="pollination (5).png" alt="Standoff position at 120mm from flower center">
-                <p class="fig-caption">Figure 5: Pre-contact standoff pose (120mm)</p>
-              </div>
-              <div>
-                <img src="pollination (6).png" alt="Cotton bud making gentle contact with flower center">
-                <p class="fig-caption">Figure 6: Contact phase — 18mm thrust completed</p>
-              </div>
-              <div>
-                <img src="pollination (7).png" alt="EKF-smoothed servo trajectories during motion">
-                <p class="fig-caption">Figure 7: EKF filtering on servo angles (real vs filtered)</p>
-              </div>
-              <div>
-                <img src="pollination (8).png" alt="Motion recording with Akima spline interpolation">
-                <p class="fig-caption">Figure 8: Recorded trajectory with spline playback</p>
-              </div>
-              <div>
-                <img src="pollination (9).png" alt="Virtual vs physical execution comparison">
-                <p class="fig-caption">Figure 9: Simulation vs real-world pose matching</p>
-              </div>
-              <div>
-                <img src="pollination (10).png" alt="Fully autonomous multi-flower pollination sequence">
-                <p class="fig-caption">Figure 10: End-to-end autonomous pollination of 5 flowers</p>
-              </div>
-            </div>
-
-            <div id="projectCarousel" class="carousel slide" data-ride="carousel">
-              <div class="carousel-inner">
-                <div class="carousel-item active">
-                  <img src="pollination (1).png" alt="System Dashboard">
-                </div>
-                <div class="carousel-item">
-                  <img src="pollination (3).png" alt="3D Visualization">
-                </div>
-                <div class="carousel-item">
-                  <img src="pollination (6).png" alt="Pollination Contact">
-                </div>
-                <div class="carousel-item">
-                  <img src="pollination (10).png" alt="Autonomous Sequence">
+            <!-- Image Slider -->
+            <div class="image-slider">
+              <h4 style="color: var(--accent-red); text-align: center;">System Visualizations</h4>
+              <div class="slider-container">
+                <button class="slider-nav prev-btn" onclick="moveSlide(-1)">❮</button>
+                <button class="slider-nav next-btn" onclick="moveSlide(1)">❯</button>
+                <div class="slider" id="imageSlider">
+                  <div class="slide">
+                    <img src="pollination (1).png" alt="Full system dashboard" onclick="openLightbox(0)">
+                    <div class="slide-caption">Figure 1: Full system dashboard with real-time 3D visualization and servo controls</div>
+                  </div>
+                  <div class="slide">
+                    <img src="pollination (2).png" alt="Real-time flower detection" onclick="openLightbox(1)">
+                    <div class="slide-caption">Figure 2: Real-time flower detection with confidence filtering</div>
+                  </div>
+                  <div class="slide">
+                    <img src="pollination (3).png" alt="3D visualization" onclick="openLightbox(2)">
+                    <div class="slide-caption">Figure 3: 3D visualization with camera frustum and approach vector</div>
+                  </div>
+                  <div class="slide">
+                    <img src="pollination (4).png" alt="IK solver interface" onclick="openLightbox(3)">
+                    <div class="slide-caption">Figure 4: IK solver interface with direction and position constraints</div>
+                  </div>
+                  <div class="slide">
+                    <img src="pollination (5).png" alt="Standoff pose" onclick="openLightbox(4)">
+                    <div class="slide-caption">Figure 5: Pre-contact standoff pose (120mm)</div>
+                  </div>
+                  <div class="slide">
+                    <img src="pollination (6).png" alt="Contact phase" onclick="openLightbox(5)">
+                    <div class="slide-caption">Figure 6: Contact phase — 18mm thrust completed</div>
+                  </div>
+                  <div class="slide">
+                    <img src="pollination (7).png" alt="EKF filtering" onclick="openLightbox(6)">
+                    <div class="slide-caption">Figure 7: EKF filtering on servo angles (real vs filtered)</div>
+                  </div>
+                  <div class="slide">
+                    <img src="pollination (8).png" alt="Trajectory playback" onclick="openLightbox(7)">
+                    <div class="slide-caption">Figure 8: Recorded trajectory with spline playback</div>
+                  </div>
+                  <div class="slide">
+                    <img src="pollination (9).png" alt="Sim vs real" onclick="openLightbox(8)">
+                    <div class="slide-caption">Figure 9: Simulation vs real-world pose matching</div>
+                  </div>
+                  <div class="slide">
+                    <img src="pollination (10).png" alt="Autonomous sequence" onclick="openLightbox(9)">
+                    <div class="slide-caption">Figure 10: End-to-end autonomous pollination of 5 flowers</div>
+                  </div>
                 </div>
               </div>
-              <a class="carousel-control-prev" href="#projectCarousel" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-              </a>
-              <a class="carousel-control-next" href="#projectCarousel" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-              </a>
             </div>
 
             <div class="section-divider"></div>
@@ -408,28 +530,28 @@
               <span class="tech-tag">Serial Comm</span>
               <span class="tech-tag">QThread</span>
             </div>
-
           </div>
         </div>
       </div>
     </section>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery-migrate-3.0.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.easing.1.3.js"></script>
-    <script src="js/jquery.waypoints.min.js"></script>
-    <script src="js/jquery.stellar.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <script src="js/aos.js"></script>
-    <script src="js/jquery.animateNumber.min.js"></script>
-    <script src="js/scrollax.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+      <button class="lightbox-close" onclick="closeLightbox()">×</button>
+      <button class="lightbox-nav lightbox-prev" onclick="changeLightboxImage(-1)">❮</button>
+      <button class="lightbox-nav lightbox-next" onclick="changeLightboxImage(1)">❯</button>
+      <img id="lightboxImage" src="" alt="Enlarged view">
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
     <script>
+      // Auto-render KaTeX
       document.addEventListener("DOMContentLoaded", function() {
         renderMathInElement(document.body, {
           delimiters: [
@@ -437,10 +559,67 @@
             {left: "$", right: "$", display: false},
             {left: "\\[", right: "\\]", display: true},
             {left: "\\(", right: "\\)", display: false}
-          ]
+          ],
+          throwOnError: false
         });
       });
+
+      // Slider
+      let currentSlide = 0;
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+
+      function showSlide(n) {
+        currentSlide = (n + totalSlides) % totalSlides;
+        const slider = document.getElementById('imageSlider');
+        slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+      }
+
+      function moveSlide(direction) {
+        showSlide(currentSlide + direction);
+      }
+
+      // Lightbox
+      let lightboxIndex = 0;
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightboxImage');
+
+      function openLightbox(index) {
+        lightboxIndex = index;
+        lightboxImg.src = slides[index].querySelector('img').src.replace(/(\.png)$/, '_high$1'); // optional high-res
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      }
+
+      function changeLightboxImage(direction) {
+        lightboxIndex = (lightboxIndex + direction + totalSlides) % totalSlides;
+        lightboxImg.src = slides[lightboxIndex].querySelector('img').src.replace(/(\.png)$/, '_high$1');
+      }
+
+      // Close on click outside
+      lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      // Keyboard navigation
+      document.addEventListener('keydown', function(e) {
+        if (lightbox.classList.contains('active')) {
+          if (e.key === 'ArrowLeft') changeLightboxImage(-1);
+          if (e.key === 'ArrowRight') changeLightboxImage(1);
+          if (e.key === 'Escape') closeLightbox();
+        } else {
+          if (e.key === 'ArrowLeft') moveSlide(-1);
+          if (e.key === 'ArrowRight') moveSlide(1);
+        }
+      });
+
+      // Initialize
+      showSlide(0);
     </script>
-    <script src="js/main.js"></script>
   </body>
 </html>
