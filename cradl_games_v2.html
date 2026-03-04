@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRADL — Game Theory Interactive Lab v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#020912;--surf:#060f1c;--surf2:#0a1829;--surf3:#0e2038;--border:#1a3a58;--border2:#0f2540;
+  --cyan:#00d4ff;--cyan2:rgba(0,212,255,0.15);--cyan3:rgba(0,212,255,0.06);--cyan4:rgba(0,212,255,0.03);
+  --red:#ff2d55;--red2:rgba(255,45,85,0.15);--red3:rgba(255,45,85,0.06);
+  --green:#00ff9f;--green2:rgba(0,255,159,0.12);--green3:rgba(0,255,159,0.05);
+  --gold:#ffd700;--gold2:rgba(255,215,0,0.12);--gold3:rgba(255,215,0,0.05);
+  --purple:#b44eff;--orange:#ff6b35;--pink:#ff3d9a;
+  --text:#c8e8ff;--muted:#4a7fa5;--muted2:#2a5070;--muted3:#1a3550;
+  --fd:'Orbitron',sans-serif;--fu:'Rajdhani',sans-serif;--fm:'Share Tech Mono',monospace;
+  --glow-cyan:0 0 20px rgba(0,212,255,0.4);
+  --glow-red:0 0 20px rgba(255,45,85,0.4);
+  --glow-green:0 0 20px rgba(0,255,159,0.4);
+  --glow-gold:0 0 20px rgba(255,215,0,0.4);
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--fu);}
+
+/* Animated grid background */
+body::before{content:'';position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,212,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,212,255,.018) 1px,transparent 1px);
+  background-size:48px 48px;pointer-events:none;z-index:0;
+  animation:gridShift 60s linear infinite;}
+@keyframes gridShift{from{background-position:0 0}to{background-position:48px 48px}}
+
+/* Scanline overlay */
+body::after{content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
+  pointer-events:none;z-index:1;}
+
+/* ── HEADER ── */
+header{display:flex;align-items:center;padding:0 20px;height:52px;border-bottom:1px solid var(--border);
+  background:linear-gradient(90deg,var(--surf) 0%,var(--surf2) 100%);flex-shrink:0;position:relative;z-index:10;gap:16px;
+  box-shadow:0 2px 30px rgba(0,0,0,0.5);}
+.logo{font-family:var(--fd);font-size:13px;font-weight:900;color:var(--cyan);letter-spacing:6px;
+  text-shadow:0 0 20px rgba(0,212,255,0.6);}
+.logo em{color:var(--gold);font-style:normal;}
+.logo-sep{width:1px;height:28px;background:var(--border);margin:0 4px;}
+.hsub{font-family:var(--fm);font-size:9px;color:var(--muted);letter-spacing:2px;}
+.hright{margin-left:auto;display:flex;align-items:center;gap:16px;}
+.status-group{display:flex;align-items:center;gap:8px;}
+.dot{width:7px;height:7px;background:var(--green);border-radius:50%;
+  box-shadow:0 0 10px var(--green),0 0 20px rgba(0,255,159,0.4);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(0.85)}}
+.hstat{font-family:var(--fm);font-size:9px;color:var(--muted);}
+.hversion{font-family:var(--fm);font-size:8px;color:var(--muted2);padding:2px 6px;border:1px solid var(--border);letter-spacing:1px;}
+
+/* ── NAV ── */
+nav{display:flex;padding:0 16px;background:var(--surf);border-bottom:1px solid var(--border);flex-shrink:0;
+  gap:0;position:relative;z-index:9;}
+.tab{padding:10px 18px;cursor:pointer;font-family:var(--fd);font-size:8px;font-weight:700;letter-spacing:2px;
+  color:var(--muted);border-bottom:2px solid transparent;transition:all .25s;white-space:nowrap;
+  display:flex;align-items:center;gap:8px;position:relative;user-select:none;}
+.tab::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;
+  background:var(--cyan);transform:scaleX(0);transition:transform .25s;transform-origin:left;}
+.tab:hover{color:var(--text);background:var(--cyan4);}
+.tab.active{color:var(--cyan);}
+.tab.active::after{transform:scaleX(1);}
+.tab-icon{font-size:12px;}
+.tab-num{font-family:var(--fm);font-size:7px;background:var(--muted3);color:var(--muted);
+  padding:2px 5px;border-radius:2px;transition:all .25s;}
+.tab.active .tab-num{background:var(--cyan2);color:var(--cyan);}
+
+/* ── LAYOUT ── */
+.main{display:flex;flex:1;overflow:hidden;position:relative;z-index:2;height:calc(100vh - 52px - 43px);}
+.canvas-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;}
+.game-bar{display:flex;align-items:center;padding:0 16px;height:43px;
+  background:linear-gradient(90deg,var(--surf2) 0%,var(--surf) 100%);
+  border-bottom:1px solid var(--border);gap:10px;flex-shrink:0;}
+.game-title{font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:4px;color:var(--gold);
+  text-shadow:0 0 15px rgba(255,215,0,0.4);}
+.badge{font-family:var(--fm);font-size:8px;padding:3px 9px;border:1px solid var(--border);
+  color:var(--muted);letter-spacing:1px;border-radius:2px;transition:all .2s;}
+.badge.on{border-color:var(--cyan);color:var(--cyan);background:var(--cyan3);box-shadow:inset 0 0 8px var(--cyan3);}
+.badge.danger{border-color:var(--red);color:var(--red);background:var(--red3);animation:dangerBlink 0.5s infinite;}
+@keyframes dangerBlink{0%,100%{opacity:1}50%{opacity:0.5}}
+.badge.warn{border-color:var(--gold);color:var(--gold);}
+canvas{display:block;width:100%;flex:1;cursor:crosshair;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:264px;border-left:1px solid var(--border);background:var(--surf);
+  display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;
+  scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.sb{padding:13px 15px;border-bottom:1px solid var(--border2);}
+.sb-label{font-family:var(--fm);font-size:8px;color:var(--muted);letter-spacing:3px;
+  margin-bottom:10px;text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+.sb-label::before{content:'';display:inline-block;width:12px;height:1px;background:var(--cyan);opacity:0.5;}
+.srow{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.sl{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px;}
+.sv{font-family:var(--fm);font-size:13px;color:var(--cyan);}
+.sv.r{color:var(--red);} .sv.g{color:var(--green);} .sv.y{color:var(--gold);}
+.prog{height:3px;background:var(--surf3);border-radius:2px;margin:2px 0 8px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:2px;transition:width .5s cubic-bezier(0.4,0,0.2,1);}
+
+/* buttons */
+.btn{width:100%;padding:8px;background:transparent;border:1px solid var(--border);color:var(--text);
+  font-family:var(--fd);font-size:8px;letter-spacing:2px;cursor:pointer;transition:all .15s;
+  margin-bottom:5px;display:flex;align-items:center;justify-content:center;gap:7px;border-radius:2px;}
+.btn:hover{border-color:var(--cyan);color:var(--cyan);background:var(--cyan3);
+  box-shadow:0 0 15px rgba(0,212,255,0.1);}
+.btn.act{border-color:var(--gold);color:var(--gold);background:var(--gold3);}
+.btn.red:hover{border-color:var(--red);color:var(--red);background:var(--red3);}
+.btn.green:hover{border-color:var(--green);color:var(--green);background:var(--green3);}
+
+/* slider */
+.sld-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.sld-lbl{font-size:10px;color:var(--muted);width:80px;letter-spacing:.3px;flex-shrink:0;}
+.sld-val{font-family:var(--fm);font-size:10px;color:var(--cyan);width:28px;text-align:right;flex-shrink:0;}
+input[type=range]{flex:1;height:2px;appearance:none;background:var(--border);border-radius:2px;outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:12px;height:12px;background:var(--cyan);
+  border-radius:50%;cursor:pointer;box-shadow:0 0 8px var(--cyan);transition:transform .1s;}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3);}
+
+/* prob bars */
+.prob-bars{display:flex;flex-direction:column;gap:6px;}
+.pb-row{display:flex;align-items:center;gap:6px;}
+.pb-lbl{font-family:var(--fm);font-size:11px;width:16px;text-align:center;font-weight:700;}
+.pb-track{flex:1;height:14px;background:var(--surf3);border:1px solid var(--border);border-radius:2px;overflow:hidden;}
+.pb-fill{height:100%;border-radius:1px;transition:width .3s ease;}
+.pb-pct{font-family:var(--fm);font-size:9px;color:var(--muted);width:32px;text-align:right;}
+
+/* path rows (game 4) */
+.path-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;padding:7px 9px;
+  background:var(--surf2);border:1px solid var(--border);border-radius:3px;transition:border-color .2s;}
+.path-row:hover{border-color:var(--border2);}
+.pn{font-family:var(--fm);font-size:11px;width:22px;font-weight:700;}
+.pcost{font-family:var(--fm);font-size:10px;color:var(--cyan);width:46px;}
+.pctrl{display:flex;align-items:center;gap:3px;margin-left:auto;}
+.pbtn{width:20px;height:20px;background:var(--surf);border:1px solid var(--border);color:var(--text);
+  font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  line-height:1;transition:all .1s;border-radius:2px;}
+.pbtn:hover{border-color:var(--cyan);color:var(--cyan);}
+.pcount{font-family:var(--fm);font-size:13px;width:20px;text-align:center;}
+
+/* instructions */
+.instrs{padding:11px 15px;flex:1;}
+.irow{display:flex;gap:8px;margin-bottom:9px;font-size:10.5px;line-height:1.55;color:#5a8daf;}
+.ikey{background:var(--surf2);border:1px solid var(--border);color:var(--cyan);font-family:var(--fm);
+  font-size:8px;padding:2px 6px;border-radius:2px;flex-shrink:0;height:fit-content;margin-top:1px;}
+
+/* overlay */
+.overlay{position:absolute;inset:0;background:rgba(2,9,18,.92);display:none;flex-direction:column;
+  align-items:center;justify-content:center;z-index:50;backdrop-filter:blur(4px);}
+.overlay.show{display:flex;}
+.ov-inner{text-align:center;position:relative;}
+.ov-glow{position:absolute;inset:-60px;border-radius:50%;opacity:0.3;filter:blur(40px);pointer-events:none;}
+.ov-title{font-family:var(--fd);font-size:26px;font-weight:900;letter-spacing:6px;margin-bottom:10px;
+  position:relative;}
+.ov-sub{font-family:var(--fm);font-size:10px;color:var(--muted);margin-bottom:6px;letter-spacing:2px;}
+.ov-score{font-family:var(--fm);font-size:14px;margin-bottom:28px;color:var(--text);}
+.ov-btn{padding:11px 32px;background:transparent;border:1px solid var(--cyan);color:var(--cyan);
+  font-family:var(--fd);font-size:9px;letter-spacing:3px;cursor:pointer;transition:all .2s;border-radius:2px;}
+.ov-btn:hover{background:var(--cyan2);box-shadow:var(--glow-cyan);}
+
+/* wave/score flash */
+#wflash{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-family:var(--fd);font-size:10px;
+  color:var(--gold);letter-spacing:3px;background:rgba(2,7,14,.85);padding:4px 16px;
+  border:1px solid var(--gold);opacity:0;transition:opacity .4s;pointer-events:none;z-index:20;
+  box-shadow:0 0 20px rgba(255,215,0,0.2);}
+#wflash.show{opacity:1;}
+#sflash{position:absolute;bottom:55px;left:50%;transform:translateX(-50%);font-family:var(--fd);
+  font-size:12px;letter-spacing:2px;opacity:0;transition:opacity .35s;pointer-events:none;z-index:20;white-space:nowrap;}
+#sflash.show{opacity:1;}
+
+/* tooltip */
+.tooltip{position:absolute;font-family:var(--fm);font-size:9px;background:var(--surf2);
+  border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:2px;
+  pointer-events:none;z-index:100;opacity:0;transition:opacity .15s;white-space:nowrap;}
+.tooltip.show{opacity:1;}
+
+/* mini map corner */
+.corner-stat{position:absolute;font-family:var(--fm);font-size:8px;color:var(--muted);
+  background:rgba(6,15,28,0.8);border:1px solid var(--border2);padding:3px 7px;border-radius:2px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">CRADL <em>|</em> GAME THEORY LAB</div>
+  <div class="logo-sep"></div>
+  <div class="hsub">GEORGE MASON UNIVERSITY · INTERACTIVE RESEARCH DEMOS</div>
+  <div class="hright">
+    <div class="hversion">v2.0</div>
+    <div class="status-group">
+      <div class="dot"></div>
+      <div class="hstat" id="hstat">SYSTEM ONLINE</div>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="tab active" onclick="switchGame(0)">
+    <span class="tab-icon">🛡</span> PERIMETER DEFENSE <span class="tab-num">01</span>
+  </div>
+  <div class="tab" onclick="switchGame(1)">
+    <span class="tab-icon">⚡</span> REACH-AVOID <span class="tab-num">02</span>
+  </div>
+  <div class="tab" onclick="switchGame(2)">
+    <span class="tab-icon">🎭</span> DECEPTION BY MOTION <span class="tab-num">03</span>
+  </div>
+  <div class="tab" onclick="switchGame(3)">
+    <span class="tab-icon">🕸</span> GRAPH COORDINATION <span class="tab-num">04</span>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="canvas-wrap">
+    <div class="game-bar">
+      <div class="game-title" id="gtitle">PERIMETER DEFENSE</div>
+      <div class="badge on" id="modeBadge">AUTO MODE</div>
+      <div class="badge" id="waveBadge">WAVE 1</div>
+      <div class="badge danger" id="alertBadge" style="display:none">⚠ BREACH</div>
+      <div class="badge warn" id="threatBadge" style="display:none">THREAT LVL ▲</div>
+    </div>
+    <canvas id="gc"></canvas>
+    <div class="overlay" id="overlay">
+      <div class="ov-inner">
+        <div class="ov-glow" id="ov-glow"></div>
+        <div class="ov-title" id="ov-title">GAME OVER</div>
+        <div class="ov-sub" id="ov-sub">PERIMETER BREACHED</div>
+        <div class="ov-score" id="ov-score">SCORE: 0</div>
+        <button class="ov-btn" onclick="restartCurrent()">▶ RESTART MISSION</button>
+      </div>
+    </div>
+    <div id="wflash"></div>
+    <div id="sflash"></div>
+  </div>
+  <div class="sidebar" id="sidebar"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  CORE UTILITIES
+// ═══════════════════════════════════════════════════════════════
+const canvas = document.getElementById('gc');
+const ctx = canvas.getContext('2d');
+let W, H, cx, cy;
+let mouseX = 0, mouseY = 0;
+let activeGame = 0;
+let raf;
+
+function resize() {
+  const wrap = canvas.parentElement;
+  W = wrap.clientWidth;
+  H = wrap.clientHeight - 43;
+  canvas.width = W;
+  canvas.height = H;
+  cx = W/2; cy = H/2;
+  initActiveGame();
+}
+
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const lerp  = (a,b,t)  => a + (b-a)*t;
+const easeOut = t => 1-(1-t)**3;
+const dist2  = (ax,ay,bx,by) => Math.sqrt((ax-bx)**2+(ay-by)**2);
+const angleDiff = (a,b) => { let d=b-a; while(d>Math.PI)d-=2*Math.PI; while(d<-Math.PI)d+=2*Math.PI; return d; };
+const rnd  = (a,b) => a + Math.random()*(b-a);
+const rndi = (a,b) => Math.floor(rnd(a,b));
+const hexR = h => parseInt(h.slice(1,3),16);
+const hexG = h => parseInt(h.slice(3,5),16);
+const hexB = h => parseInt(h.slice(5,7),16);
+const hexA = (h,a) => `rgba(${hexR(h)},${hexG(h)},${hexB(h)},${a})`;
+
+function flashMsg(txt, col='#ffd700'){
+  const el=document.getElementById('sflash');
+  el.textContent=txt; el.style.color=col;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),1400);
+}
+function flashWave(txt){
+  const el=document.getElementById('wflash');
+  el.textContent=txt; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2200);
+}
+function showOverlay(title, sub, score, col='#00d4ff'){
+  document.getElementById('ov-title').textContent=title;
+  document.getElementById('ov-title').style.color=col;
+  document.getElementById('ov-sub').textContent=sub;
+  document.getElementById('ov-score').textContent=score;
+  document.getElementById('ov-glow').style.background=col;
+  document.getElementById('overlay').classList.add('show');
+}
+function hideOverlay(){ document.getElementById('overlay').classList.remove('show'); }
+
+canvas.addEventListener('mousemove', e=>{
+  const r=canvas.getBoundingClientRect();
+  mouseX=(e.clientX-r.left)*(canvas.width/r.width);
+  mouseY=(e.clientY-r.top)*(canvas.height/r.height);
+});
+canvas.addEventListener('click', e=>{
+  const r=canvas.getBoundingClientRect();
+  handleClick((e.clientX-r.left)*(canvas.width/r.width),(e.clientY-r.top)*(canvas.height/r.height));
+});
+
+// Particle system (shared)
+function makeParticles(x,y,col,n,speedMult=1){
+  const out=[];
+  for(let i=0;i<n;i++){
+    const a=rnd(0,Math.PI*2), s=rnd(1.5,5)*speedMult;
+    out.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,col,life:rnd(20,45),maxLife:45,size:rnd(1.5,3.5)});
+  }
+  return out;
+}
+function updateParticles(arr){
+  arr.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vx*=0.92;p.vy*=0.92;p.vy+=0.04;p.life--;});
+  return arr.filter(p=>p.life>0);
+}
+function drawParticles(arr){
+  arr.forEach(p=>{
+    const a=p.life/p.maxLife;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.size*a,0,Math.PI*2);
+    const alpha=Math.floor(a*220).toString(16).padStart(2,'0');
+    ctx.fillStyle=p.col+alpha; ctx.fill();
+  });
+}
+
+// Draw glowing text
+function glowText(text,x,y,col,size,family='Share Tech Mono'){
+  ctx.save();
+  ctx.shadowColor=col; ctx.shadowBlur=12;
+  ctx.fillStyle=col; ctx.font=`${size}px "${family}"`;
+  ctx.textAlign='center'; ctx.fillText(text,x,y);
+  ctx.restore();
+}
+
+// Rounded rect helper
+function roundRect(x,y,w,h,r=4){
+  ctx.beginPath(); ctx.roundRect(x,y,w,h,r);
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+//  GAME 1 — PERIMETER DEFENSE (TUNABLE)
+// ═══════════════════════════════════════════════════════════════
+const G1 = {
+  defenders:[], intruders:[], particles:[], effects:[],
+  trails:[], // persistent breach trails
+  score:{defended:0, breached:0, totalIntercepted:0},
+  wave:1, waveTimer:0, spawnTimer:0,
+  gameOver:false, autoMode:true,
+  R:0,
+
+  // Tunable parameters
+  cfg:{
+    defenderCount:3,
+    defSpeed:1.8,       // defender angular speed
+    intruderSpeed:1.0,  // multiplier
+    intruderCount:1,    // per spawn
+    spawnRate:1.0,      // multiplier (higher = faster spawns)
+    maxBreaches:5,
+    captureAngle: Math.PI/5.5,
+    smartIntruders: false,  // intruders try to find gaps
+    heterogeneous: false,   // mixed defender speeds
+  },
+  breachFlash:0,
+  threatLevel:0,
+  radarAngle:0,
+  pingTime:0, pings:[],
+};
+
+function initG1(){
+  G1.R = Math.min(W,H)*0.34;
+  G1.defenders=[];
+  G1.intruders=[];
+  G1.particles=[];
+  G1.effects=[];
+  G1.trails=[];
+  G1.pings=[];
+  G1.score={defended:0, breached:0, totalIntercepted:0};
+  G1.wave=1; G1.waveTimer=0; G1.spawnTimer=0;
+  G1.gameOver=false;
+  G1.breachFlash=0;
+  G1.threatLevel=0;
+  G1.radarAngle=0;
+
+  // Init defenders based on cfg
+  const n = G1.cfg.defenderCount;
+  for(let i=0;i<n;i++){
+    const a = i*Math.PI*2/n;
+    const spd = G1.cfg.heterogeneous
+      ? (i%2===0 ? G1.cfg.defSpeed*1.4 : G1.cfg.defSpeed*0.65)
+      : G1.cfg.defSpeed;
+    G1.defenders.push({angle:a, targetAngle:a, id:i, speed:spd, trail:[], energy:1.0});
+  }
+
+  document.getElementById('gtitle').textContent='PERIMETER DEFENSE';
+  document.getElementById('waveBadge').textContent='WAVE 1';
+  document.getElementById('modeBadge').textContent=G1.autoMode?'AUTO MODE':'MANUAL';
+  G1.autoMode
+    ? document.getElementById('modeBadge').classList.add('on')
+    : document.getElementById('modeBadge').classList.remove('on');
+  document.getElementById('alertBadge').style.display='none';
+  document.getElementById('threatBadge').style.display='none';
+  renderSidebarG1();
+}
+
+function spawnIntruder(){
+  const angle = rnd(0, Math.PI*2);
+
+  // Smart intruders: find gap between defenders
+  let spawnAngle = angle;
+  if(G1.cfg.smartIntruders && G1.defenders.length>=2){
+    let maxGap=-1, gapCenter=0;
+    const sorted=[...G1.defenders].sort((a,b)=>a.angle-b.angle);
+    for(let i=0;i<sorted.length;i++){
+      const a=sorted[i].angle, b=sorted[(i+1)%sorted.length].angle;
+      const gap = ((b-a+Math.PI*2)%(Math.PI*2));
+      if(gap>maxGap){maxGap=gap; gapCenter=(a+gap/2+Math.PI*2)%(Math.PI*2);}
+    }
+    // Add noise so it's not perfect
+    spawnAngle = gapCenter + rnd(-0.3, 0.3);
+  }
+
+  const dist = G1.R + rnd(80, 150);
+  const baseSpd = 0.55 + G1.wave*0.07 + rnd(0, 0.18);
+  const speed = baseSpd * G1.cfg.intruderSpeed;
+  G1.intruders.push({
+    x: cx + Math.cos(spawnAngle)*dist,
+    y: cy + Math.sin(spawnAngle)*dist,
+    angle:spawnAngle, speed, active:true,
+    trail:[], id:Math.random(),
+    // Weaving behavior
+    wobble: rnd(0.3,1.2) * (Math.random()>0.5?1:-1),
+    wobbleFreq: rnd(0.04,0.1),
+    wobbleAmt: G1.cfg.smartIntruders ? rnd(0.05,0.18) : rnd(0,0.08),
+    spawnT: Date.now(),
+  });
+}
+
+function updateG1(){
+  if(G1.gameOver) return;
+  const dt=1;
+
+  // Radar sweep
+  G1.radarAngle += 0.008;
+
+  // Spawning
+  G1.spawnTimer++;
+  const baseInterval = Math.max(40, 180 - G1.wave*14);
+  const spawnInterval = baseInterval / G1.cfg.spawnRate;
+  if(G1.spawnTimer >= spawnInterval){
+    G1.spawnTimer=0;
+    const cnt = clamp(Math.floor(G1.cfg.intruderCount * (1 + (G1.wave-1)*0.3)), 1, 8);
+    for(let i=0;i<cnt;i++) setTimeout(()=>spawnIntruder(), i*120);
+  }
+
+  // Wave progression
+  G1.waveTimer++;
+  if(G1.waveTimer > 600 + G1.wave*80){
+    G1.waveTimer=0; G1.wave++;
+    document.getElementById('waveBadge').textContent=`WAVE ${G1.wave}`;
+    flashWave(`⚡ WAVE ${G1.wave} — THREAT ESCALATING`);
+  }
+
+  // Threat level
+  G1.threatLevel = clamp(G1.intruders.length / 4, 0, 1);
+  const tlEl=document.getElementById('threatBadge');
+  if(G1.threatLevel>0.5) tlEl.style.display='flex'; else tlEl.style.display='none';
+
+  // AI defender assignment (optimal interception)
+  if(G1.autoMode && G1.intruders.length>0){
+    // Reset all targets
+    for(let d of G1.defenders) d.assigned=false;
+
+    // Sort intruders by urgency (closest to perimeter = most urgent)
+    const sorted=[...G1.intruders].sort((a,b)=>{
+      const rA=dist2(a.x,a.y,cx,cy), rB=dist2(b.x,b.y,cx,cy);
+      return (rA-G1.R)/a.speed - (rB-G1.R)/b.speed;
+    });
+
+    for(let intruder of sorted){
+      const iA=Math.atan2(intruder.y-cy, intruder.x-cx);
+      const r=dist2(intruder.x,intruder.y,cx,cy);
+      const timeToPerimeter=(r-G1.R)/intruder.speed;
+      let best=null, bestScore=Infinity;
+      for(let d of G1.defenders){
+        const arcDist=Math.abs(angleDiff(d.angle,iA))*G1.R;
+        const travelTime=arcDist/(d.speed*0.018*60);
+        const slack=travelTime-timeToPerimeter;
+        const score = slack + (d.assigned?5:0); // penalty for double-assignment
+        if(score<bestScore){bestScore=score; best=d;}
+      }
+      if(best){best.targetAngle=iA; best.assigned=true;}
+    }
+  }
+
+  // Move defenders
+  for(let d of G1.defenders){
+    const diff=angleDiff(d.angle, d.targetAngle);
+    const step=Math.min(Math.abs(diff), d.speed*0.018);
+    d.angle += Math.sign(diff)*step;
+    d.trail.push({x:cx+Math.cos(d.angle)*G1.R, y:cy+Math.sin(d.angle)*G1.R});
+    if(d.trail.length>12)d.trail.shift();
+  }
+
+  // Move intruders
+  for(let intruder of G1.intruders){
+    if(!intruder.active) continue;
+
+    intruder.trail.push({x:intruder.x, y:intruder.y});
+    if(intruder.trail.length>22)intruder.trail.shift();
+
+    const dx=cx-intruder.x, dy=cy-intruder.y;
+    const r=Math.sqrt(dx*dx+dy*dy);
+
+    // Wobble perpendicular to direction
+    const perpX=-dy/r, perpY=dx/r;
+    const t=Date.now()*intruder.wobbleFreq;
+    const wb=Math.sin(t*intruder.wobble)*intruder.wobbleAmt;
+
+    intruder.x += (dx/r + perpX*wb)*intruder.speed;
+    intruder.y += (dy/r + perpY*wb)*intruder.speed;
+
+    // Radar ping detection
+    const dAngle=Math.abs(angleDiff(Math.atan2(intruder.y-cy,intruder.x-cx), G1.radarAngle));
+    if(dAngle<0.05 && r>G1.R){
+      G1.pings.push({x:intruder.x,y:intruder.y,life:40,maxLife:40});
+    }
+
+    if(r <= G1.R+3){
+      intruder.active=false;
+      const iAngle=Math.atan2(intruder.y-cy, intruder.x-cx);
+      let captured=false;
+      for(let d of G1.defenders){
+        if(Math.abs(angleDiff(d.angle,iAngle)) < G1.cfg.captureAngle){captured=true; break;}
+      }
+      if(captured){
+        G1.score.defended++;
+        G1.score.totalIntercepted++;
+        G1.particles.push(...makeParticles(intruder.x,intruder.y,'#00d4ff',22,1.2));
+        G1.effects.push({x:intruder.x,y:intruder.y,r:0,maxR:40,col:'#00d4ff',life:28,maxLife:28});
+        flashMsg('✓ INTERCEPTED +1','#00d4ff');
+        document.getElementById('alertBadge').style.display='none';
+      } else {
+        G1.score.breached++;
+        G1.particles.push(...makeParticles(intruder.x,intruder.y,'#ff2d55',30,1.4));
+        G1.effects.push({x:intruder.x,y:intruder.y,r:0,maxR:60,col:'#ff2d55',life:35,maxLife:35});
+        G1.breachFlash=40;
+        flashMsg('✗ BREACH!','#ff2d55');
+        document.getElementById('alertBadge').style.display='flex';
+        // Store trail for lingering red mark
+        G1.trails.push({pts:[...intruder.trail],life:180,col:'#ff2d55'});
+        setTimeout(()=>document.getElementById('alertBadge').style.display='none',2500);
+        if(G1.score.breached >= G1.cfg.maxBreaches){
+          G1.gameOver=true;
+          showOverlay('PERIMETER LOST',`${G1.cfg.maxBreaches} BREACHES DETECTED`,
+            `INTERCEPTED: ${G1.score.defended} | WAVE: ${G1.wave} | EFFICIENCY: ${(G1.score.defended/(G1.score.defended+G1.score.breached)*100).toFixed(0)}%`,'#ff2d55');
+        }
+      }
+    }
+  }
+  G1.intruders=G1.intruders.filter(i=>i.active);
+
+  // Update effects
+  G1.particles=updateParticles(G1.particles);
+  for(let e of G1.effects){e.r+=e.maxR/e.life; e.life--;}
+  G1.effects=G1.effects.filter(e=>e.life>0);
+  for(let p of G1.pings) p.life--;
+  G1.pings=G1.pings.filter(p=>p.life>0);
+  for(let t of G1.trails) t.life--;
+  G1.trails=G1.trails.filter(t=>t.life>0);
+  if(G1.breachFlash>0) G1.breachFlash--;
+
+  updateSidebarG1();
+}
+
+function drawG1(){
+  ctx.clearRect(0,0,W,H);
+  const t=Date.now()/1000;
+
+  // Breach flash overlay
+  if(G1.breachFlash>0){
+    ctx.fillStyle=`rgba(255,45,85,${G1.breachFlash/40*0.22})`;
+    ctx.fillRect(0,0,W,H);
+  }
+
+  // Outer threat zone
+  ctx.save();
+  ctx.beginPath(); ctx.rect(0,0,W,H);
+  ctx.arc(cx,cy,G1.R,0,Math.PI*2,true);
+  const threatGrad=ctx.createRadialGradient(cx,cy,G1.R,cx,cy,G1.R+100);
+  threatGrad.addColorStop(0,'rgba(255,45,85,0.06)');
+  threatGrad.addColorStop(1,'rgba(255,45,85,0)');
+  ctx.fillStyle=threatGrad; ctx.fill();
+  ctx.restore();
+
+  // Radar sweep
+  ctx.save(); ctx.globalAlpha=0.08;
+  const sweepGrad=ctx.createConicalGradient?null:null; // fallback
+  ctx.beginPath(); ctx.moveTo(cx,cy);
+  ctx.arc(cx,cy,G1.R*1.65, G1.radarAngle-0.7, G1.radarAngle);
+  ctx.closePath(); ctx.fillStyle='#00d4ff'; ctx.fill();
+  // Second sweep line
+  ctx.globalAlpha=0.15;
+  ctx.beginPath(); ctx.moveTo(cx,cy);
+  ctx.lineTo(cx+Math.cos(G1.radarAngle)*G1.R*1.65, cy+Math.sin(G1.radarAngle)*G1.R*1.65);
+  ctx.strokeStyle='#00d4ff'; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.globalAlpha=1; ctx.restore();
+
+  // Radar pings
+  for(let p of G1.pings){
+    const a=p.life/p.maxLife;
+    ctx.beginPath(); ctx.arc(p.x,p.y,5+10*(1-a),0,Math.PI*2);
+    ctx.strokeStyle=`rgba(0,212,255,${a*0.8})`; ctx.lineWidth=2; ctx.stroke();
+  }
+
+  // Lingering breach trails
+  for(let t of G1.trails){
+    const a=t.life/180;
+    if(t.pts.length>1){
+      ctx.beginPath(); ctx.moveTo(t.pts[0].x,t.pts[0].y);
+      for(let p of t.pts) ctx.lineTo(p.x,p.y);
+      ctx.strokeStyle=`rgba(255,45,85,${a*0.25})`; ctx.lineWidth=2; ctx.stroke();
+    }
+  }
+
+  // Range rings
+  for(let ri of [0.5,0.75,1.0,1.35,1.7]){
+    ctx.beginPath(); ctx.arc(cx,cy,G1.R*ri,0,Math.PI*2);
+    const alpha=ri===1?0.4:0.06;
+    ctx.strokeStyle=`rgba(0,212,255,${alpha})`;
+    ctx.lineWidth=ri===1?1.5:0.8;
+    if(ri!==1) ctx.setLineDash([3,9]);
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  // Compass ticks
+  for(let i=0;i<24;i++){
+    const a=i*Math.PI/12;
+    const r1=G1.R+8, r2=G1.R+(i%6===0?22:i%3===0?15:10);
+    ctx.beginPath();
+    ctx.moveTo(cx+Math.cos(a)*r1, cy+Math.sin(a)*r1);
+    ctx.lineTo(cx+Math.cos(a)*r2, cy+Math.sin(a)*r2);
+    const alpha=i%6===0?0.6:i%3===0?0.35:0.18;
+    ctx.strokeStyle=`rgba(0,212,255,${alpha})`; ctx.lineWidth=1; ctx.stroke();
+    if(i%6===0){
+      const labels=['N','E','S','W'];
+      ctx.fillStyle='rgba(0,212,255,0.3)'; ctx.font='7px "Share Tech Mono"'; ctx.textAlign='center';
+      ctx.fillText(labels[i/6], cx+Math.cos(a)*(G1.R+30), cy+Math.sin(a)*(G1.R+30)+3);
+    }
+  }
+
+  // Central asset
+  const pulse=0.5+0.5*Math.sin(t*2.2);
+  const assetR=Math.min(W,H)*0.065;
+  ctx.beginPath(); ctx.arc(cx,cy,assetR,0,Math.PI*2);
+  ctx.fillStyle='rgba(0,255,159,0.05)'; ctx.fill();
+  ctx.strokeStyle=`rgba(0,255,159,${pulse*0.9})`; ctx.lineWidth=1.5; ctx.stroke();
+  for(let i=1;i<=3;i++){
+    ctx.beginPath(); ctx.arc(cx,cy,assetR+(i*8)*(1-pulse),0,Math.PI*2);
+    ctx.strokeStyle=`rgba(0,255,159,${pulse*0.15/i})`; ctx.lineWidth=1; ctx.stroke();
+  }
+  ctx.fillStyle='rgba(0,255,159,0.8)'; ctx.font='bold 8px "Share Tech Mono"';
+  ctx.textAlign='center'; ctx.fillText('PROTECTED ASSET',cx,cy+3);
+
+  // Capture arcs + effects
+  for(let e of G1.effects){
+    const a=e.life/e.maxLife;
+    ctx.beginPath(); ctx.arc(e.x,e.y,e.r,0,Math.PI*2);
+    const hexA=Math.floor(a*160).toString(16).padStart(2,'0');
+    ctx.strokeStyle=e.col+hexA; ctx.lineWidth=2.5; ctx.stroke();
+    // Inner burst
+    ctx.beginPath(); ctx.arc(e.x,e.y,e.r*0.4,0,Math.PI*2);
+    ctx.strokeStyle=e.col+Math.floor(a*80).toString(16).padStart(2,'0');
+    ctx.lineWidth=1; ctx.stroke();
+  }
+
+  // Intruders
+  for(let intruder of G1.intruders){
+    // Trail
+    if(intruder.trail.length>1){
+      for(let i=1;i<intruder.trail.length;i++){
+        const a=i/intruder.trail.length;
+        ctx.beginPath();
+        ctx.moveTo(intruder.trail[i-1].x, intruder.trail[i-1].y);
+        ctx.lineTo(intruder.trail[i].x, intruder.trail[i].y);
+        ctx.strokeStyle=`rgba(255,45,85,${a*0.45})`; ctx.lineWidth=a*4.5+0.5; ctx.stroke();
+      }
+    }
+    // Glow halo
+    const gr=ctx.createRadialGradient(intruder.x,intruder.y,0,intruder.x,intruder.y,18);
+    gr.addColorStop(0,'rgba(255,107,53,0.7)'); gr.addColorStop(0.5,'rgba(255,45,85,0.4)'); gr.addColorStop(1,'rgba(255,45,85,0)');
+    ctx.beginPath(); ctx.arc(intruder.x,intruder.y,18,0,Math.PI*2); ctx.fillStyle=gr; ctx.fill();
+    // Core
+    ctx.beginPath(); ctx.arc(intruder.x,intruder.y,6,0,Math.PI*2);
+    ctx.fillStyle='#ff2d55'; ctx.fill();
+    ctx.strokeStyle='rgba(255,160,120,0.9)'; ctx.lineWidth=1.5; ctx.stroke();
+    // Direction arrow
+    const dir=Math.atan2(cy-intruder.y,cx-intruder.x);
+    ctx.beginPath(); ctx.moveTo(intruder.x,intruder.y);
+    ctx.lineTo(intruder.x+Math.cos(dir)*14,intruder.y+Math.sin(dir)*14);
+    ctx.strokeStyle='rgba(255,100,80,0.4)'; ctx.lineWidth=1.5; ctx.stroke();
+  }
+
+  // Defenders
+  for(let d of G1.defenders){
+    const dx=cx+Math.cos(d.angle)*G1.R, dy=cy+Math.sin(d.angle)*G1.R;
+
+    // Capture arc (thick highlight band on perimeter)
+    ctx.beginPath();
+    ctx.arc(cx,cy,G1.R, d.angle-G1.cfg.captureAngle, d.angle+G1.cfg.captureAngle);
+    ctx.strokeStyle='rgba(0,212,255,0.22)'; ctx.lineWidth=9; ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx,cy,G1.R, d.angle-G1.cfg.captureAngle, d.angle+G1.cfg.captureAngle);
+    ctx.strokeStyle='rgba(0,212,255,0.7)'; ctx.lineWidth=1.5; ctx.stroke();
+
+    // Defender trail
+    if(d.trail.length>1){
+      for(let i=1;i<d.trail.length;i++){
+        const a=i/d.trail.length;
+        ctx.beginPath();
+        ctx.moveTo(d.trail[i-1].x,d.trail[i-1].y);
+        ctx.lineTo(d.trail[i].x,d.trail[i].y);
+        ctx.strokeStyle=`rgba(0,212,255,${a*0.2})`; ctx.lineWidth=1; ctx.stroke();
+      }
+    }
+
+    // Glow
+    const dg=ctx.createRadialGradient(dx,dy,0,dx,dy,22);
+    dg.addColorStop(0,'rgba(0,212,255,0.4)'); dg.addColorStop(1,'rgba(0,212,255,0)');
+    ctx.beginPath(); ctx.arc(dx,dy,22,0,Math.PI*2); ctx.fillStyle=dg; ctx.fill();
+    // Body
+    ctx.beginPath(); ctx.arc(dx,dy,8,0,Math.PI*2);
+    ctx.fillStyle='#00d4ff'; ctx.fill();
+    ctx.strokeStyle='rgba(200,240,255,0.8)'; ctx.lineWidth=1.5; ctx.stroke();
+    // Inner marker
+    ctx.beginPath(); ctx.arc(dx,dy,3,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.fill();
+
+    // ID label
+    ctx.fillStyle='rgba(0,212,255,0.5)'; ctx.font='6px "Share Tech Mono"'; ctx.textAlign='center';
+    ctx.fillText(`D${d.id+1}`, dx, dy-16);
+
+    // Target line (manual mode)
+    if(!G1.autoMode && Math.abs(angleDiff(d.angle,d.targetAngle))>0.05){
+      const tx=cx+Math.cos(d.targetAngle)*G1.R, ty=cy+Math.sin(d.targetAngle)*G1.R;
+      ctx.beginPath(); ctx.setLineDash([5,7]);
+      ctx.moveTo(dx,dy); ctx.lineTo(tx,ty);
+      ctx.strokeStyle='rgba(0,212,255,0.25)'; ctx.lineWidth=1; ctx.stroke(); ctx.setLineDash([]);
+    }
+  }
+
+  drawParticles(G1.particles);
+
+  // HUD bottom-left
+  ctx.fillStyle='rgba(0,212,255,0.35)'; ctx.font='8px "Share Tech Mono"'; ctx.textAlign='left';
+  ctx.fillText(`DEFENDERS: ${G1.defenders.length} | INTRUDERS: ${G1.intruders.length} | WAVE: ${G1.wave}`, 12, H-12);
+  ctx.textAlign='center';
+}
+
+function clickG1(x,y){
+  if(G1.gameOver||G1.autoMode) return;
+  const angle=Math.atan2(y-cy,x-cx);
+  let best=null, bestD=Infinity;
+  for(let d of G1.defenders){
+    const dd=Math.abs(angleDiff(d.angle,angle));
+    if(dd<bestD){bestD=dd; best=d;}
+  }
+  if(best) best.targetAngle=angle;
+}
+
+function renderSidebarG1(){
+  document.getElementById('sidebar').innerHTML=`
+    <div class="sb">
+      <div class="sb-label">MISSION STATUS</div>
+      <div class="srow"><div class="sl">Intercepted</div><div class="sv g" id="s1-def">0</div></div>
+      <div class="prog"><div class="prog-fill" id="s1-defbar" style="background:var(--green);width:0%"></div></div>
+      <div class="srow"><div class="sl">Breaches</div><div class="sv r" id="s1-br">0 / ${G1.cfg.maxBreaches}</div></div>
+      <div class="prog"><div class="prog-fill" id="s1-brbar" style="background:var(--red);width:0%"></div></div>
+      <div class="srow"><div class="sl">Wave</div><div class="sv y" id="s1-wave">1</div></div>
+      <div class="srow"><div class="sl">Defenders</div><div class="sv" id="s1-dcount">${G1.cfg.defenderCount}</div></div>
+      <div class="srow"><div class="sl">Efficiency</div><div class="sv" id="s1-eff">--</div></div>
+    </div>
+    <div class="sb">
+      <div class="sb-label">MODE</div>
+      <button class="btn" id="s1-auto" onclick="toggleAutoG1()">⚙ AUTO / MANUAL</button>
+    </div>
+    <div class="sb">
+      <div class="sb-label">TUNING — DEFENDERS</div>
+      <div class="sld-row">
+        <div class="sld-lbl">Num Defenders</div>
+        <input type="range" min="1" max="8" value="${G1.cfg.defenderCount}" step="1"
+          oninput="G1.cfg.defenderCount=+this.value;document.getElementById('s1-ndval').textContent=this.value;initG1()">
+        <div class="sld-val" id="s1-ndval">${G1.cfg.defenderCount}</div>
+      </div>
+      <div class="sld-row">
+        <div class="sld-lbl">Def Speed</div>
+        <input type="range" min="5" max="40" value="${Math.round(G1.cfg.defSpeed*10)}"
+          oninput="G1.cfg.defSpeed=this.value/10;document.getElementById('s1-spval').textContent=(this.value/10).toFixed(1);G1.defenders.forEach(d=>d.speed=G1.cfg.defSpeed)">
+        <div class="sld-val" id="s1-spval">${G1.cfg.defSpeed.toFixed(1)}</div>
+      </div>
+      <div class="sld-row">
+        <div class="sld-lbl">Capture Arc</div>
+        <input type="range" min="5" max="60" value="${Math.round(G1.cfg.captureAngle*180/Math.PI)}"
+          oninput="G1.cfg.captureAngle=this.value*Math.PI/180;document.getElementById('s1-capval').textContent=this.value+'°'">
+        <div class="sld-val" id="s1-capval">${Math.round(G1.cfg.captureAngle*180/Math.PI)}°</div>
+      </div>
+      <div class="sld-row">
+        <div class="sld-lbl">Max Breaches</div>
+        <input type="range" min="1" max="15" value="${G1.cfg.maxBreaches}" step="1"
+          oninput="G1.cfg.maxBreaches=+this.value;document.getElementById('s1-mbval').textContent=this.value">
+        <div class="sld-val" id="s1-mbval">${G1.cfg.maxBreaches}</div>
+      </div>
+    </div>
+    <div class="sb">
+      <div class="sb-label">TUNING — INTRUDERS</div>
+      <div class="sld-row">
+        <div class="sld-lbl">Intruder Speed</div>
+        <input type="range" min="3" max="30" value="${Math.round(G1.cfg.intruderSpeed*10)}"
+          oninput="G1.cfg.intruderSpeed=this.value/10;document.getElementById('s1-ispval').textContent=(this.value/10).toFixed(1)+'x'">
+        <div class="sld-val" id="s1-ispval">${G1.cfg.intruderSpeed.toFixed(1)}x</div>
+      </div>
+      <div class="sld-row">
+        <div class="sld-lbl">Per Spawn</div>
+        <input type="range" min="1" max="6" value="${G1.cfg.intruderCount}" step="1"
+          oninput="G1.cfg.intruderCount=+this.value;document.getElementById('s1-icval').textContent=this.value">
+        <div class="sld-val" id="s1-icval">${G1.cfg.intruderCount}</div>
+      </div>
+      <div class="sld-row">
+        <div class="sld-lbl">Spawn Rate</div>
+        <input type="range" min="3" max="30" value="${Math.round(G1.cfg.spawnRate*10)}"
+          oninput="G1.cfg.spawnRate=this.value/10;document.getElementById('s1-srval').textContent=(this.value/10).toFixed(1)+'x'">
+        <div class="sld-val" id="s1-srval">${G1.cfg.spawnRate.toFixed(1)}x</div>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;margin-bottom:7px;cursor:pointer">
+        <input type="checkbox" ${G1.cfg.smartIntruders?'checked':''} onchange="G1.cfg.smartIntruders=this.checked"
+          style="accent-color:var(--red);width:12px;height:12px;">
+        <span style="font-size:10px;color:var(--muted)">Smart Intruders (find gaps)</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <input type="checkbox" ${G1.cfg.heterogeneous?'checked':''} onchange="G1.cfg.heterogeneous=this.checked;initG1()"
+          style="accent-color:var(--cyan);width:12px;height:12px;">
+        <span style="font-size:10px;color:var(--muted)">Heterogeneous Defenders</span>
+      </label>
+    </div>
+    <div class="sb">
+      <button class="btn red" onclick="initG1();hideOverlay()">↺ RESTART MISSION</button>
+    </div>
+    <div class="instrs">
+      <div class="sb-label">HOW TO PLAY</div>
+      <div class="irow"><div class="ikey">AUTO</div>AI assigns defenders using optimal interception strategy</div>
+      <div class="irow"><div class="ikey">CLICK</div>In manual mode, click the perimeter ring to redirect nearest defender</div>
+      <div class="irow"><div class="ikey">GOAL</div>Stop intruders from breaching the inner perimeter</div>
+      <div class="irow"><div class="ikey">TUNE</div>Adjust speed, count, smartness, capture arc in real-time</div>
+      <div style="margin-top:12px;font-size:9px;color:var(--muted2);line-height:1.6;font-family:var(--fm)">
+        Based on: Shishika et al. — Perimeter-Defense Game with Heterogeneous Defenders (IEEE TAC)
+      </div>
+    </div>`;
+}
+
+function updateSidebarG1(){
+  const total=G1.score.defended+G1.score.breached;
+  const eff=total>0?(G1.score.defended/total*100).toFixed(0)+'%':'--';
+  const d=document.getElementById('s1-def'); if(d) d.textContent=G1.score.defended;
+  const br=document.getElementById('s1-br'); if(br) br.textContent=`${G1.score.breached} / ${G1.cfg.maxBreaches}`;
+  const db=document.getElementById('s1-defbar'); if(db) db.style.width=Math.min(100,G1.score.defended*6)+'%';
+  const brb=document.getElementById('s1-brbar'); if(brb) brb.style.width=(G1.score.breached/G1.cfg.maxBreaches*100)+'%';
+  const wv=document.getElementById('s1-wave'); if(wv) wv.textContent=G1.wave;
+  const dc=document.getElementById('s1-dcount'); if(dc) dc.textContent=G1.defenders.length+' / '+Math.min(8,G1.cfg.defenderCount);
+  const ef=document.getElementById('s1-eff'); if(ef){ef.textContent=eff; ef.className='sv '+(total>0&&G1.score.defended/total>0.7?'g':total>0&&G1.score.defended/total>0.4?'y':'r');}
+}
+function toggleAutoG1(){
+  G1.autoMode=!G1.autoMode;
+  const mb=document.getElementById('modeBadge');
+  if(G1.autoMode){mb.textContent='AUTO MODE';mb.classList.add('on');}
+  else{mb.textContent='MANUAL';mb.classList.remove('on');}
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+//  GAME 2 — REACH-AVOID (ADVANCED UNPREDICTABLE EVADER)
+// ═══════════════════════════════════════════════════════════════
+const G2 = {
+  evader:{x:0,y:0,vx:0,vy:0,trail:[],angle:0},
+  pursuers:[],
+  goalX:0, goalY:0, goalR:38,
+  captureR:20,
+  evaderSpeed:2.8, pursuerSpeed:2.2,
+  score:{wins:0,losses:0,totalRounds:0},
+  state:'playing',
+  autoEvade:true,
+  showSafety:true,
+  particles:[],
+  pursuerParticles:[],
+  levelConfig:{
+    numPursuers:2,
+    pursuerFormation:'split', // split | triangle | pincer
+    obstacleMode:false,
+  },
+  // Advanced AI state
+  ai:{
+    mode:'explore',        // explore | feint | dash | dodge
+    modeTimer:0,
+    modeMaxTime:80,
+    feintTarget:-1,
+    lastPurPos:[],
+    predictHorizon:30,
+    frustrationTimer:0,
+    // Chaos params for unpredictability
+    chaosPhase:0,
+    chaosAmp:0.8,
+    zigzagAngle:0,
+  },
+  safetyCache:{grid:null,time:0},
+  obstacles:[],
+};
+
+function initG2(){
+  G2.goalX=W*0.85; G2.goalY=cy;
+  G2.evader={x:W*0.1, y:cy, vx:0, vy:0, trail:[], angle:0};
+  G2.particles=[];
+  G2.pursuerParticles=[];
+
+  // Build pursuer formation
+  G2.pursuers=[];
+  const n=G2.levelConfig.numPursuers;
+  for(let i=0;i<n;i++){
+    let x,y;
+    if(G2.levelConfig.pursuerFormation==='split'){
+      x=W*0.42; y=H*(0.15+i*(0.7/(n-1||1)));
+    } else if(G2.levelConfig.pursuerFormation==='triangle'){
+      const a=i*Math.PI*2/n + Math.PI/2;
+      x=W*0.5+Math.cos(a)*H*0.25; y=cy+Math.sin(a)*H*0.25;
+    } else { // pincer
+      x=W*0.5; y=H*(0.2+i*(0.6/(n-1||1)));
+    }
+    G2.pursuers.push({
+      x, y, vx:0, vy:0, trail:[],
+      col:['#ff2d55','#ff6b35','#b44eff','#ff3d9a'][i%4],
+      strategy:'pursuit', // pursuit | intercept | cutoff
+      id:i,
+    });
+  }
+
+  // Smart pursuer role assignment
+  if(G2.pursuers.length>=2){
+    G2.pursuers[0].strategy='pursuit';
+    G2.pursuers[1].strategy='intercept';
+    if(G2.pursuers[2]) G2.pursuers[2].strategy='cutoff';
+  }
+
+  // Reset AI state
+  G2.ai.mode='explore'; G2.ai.modeTimer=0;
+  G2.ai.chaosPhase=rnd(0,Math.PI*2);
+  G2.ai.zigzagAngle=0;
+  G2.ai.feintTarget=-1;
+
+  G2.state='playing';
+  document.getElementById('gtitle').textContent='REACH-AVOID GAME';
+  document.getElementById('waveBadge').textContent=`W:${G2.score.wins} L:${G2.score.losses}`;
+  document.getElementById('modeBadge').textContent=G2.autoEvade?'AI EVADER':'PLAYER';
+  G2.autoEvade ? document.getElementById('modeBadge').classList.add('on')
+               : document.getElementById('modeBadge').classList.remove('on');
+  renderSidebarG2();
+}
+
+function computeSafetyField(){
+  const now=Date.now();
+  if(now - G2.safetyCache.time < 80 && G2.safetyCache.grid) return G2.safetyCache.grid;
+  const step=18, cols=Math.ceil(W/step)+1, rows=Math.ceil(H/step)+1;
+  const grid=new Float32Array(cols*rows);
+  for(let gxi=0;gxi<cols;gxi++){
+    for(let gyi=0;gyi<rows;gyi++){
+      const gx=gxi*step, gy=gyi*step;
+      const dGoal=dist2(gx,gy,G2.goalX,G2.goalY);
+      let minP=Infinity;
+      for(let p of G2.pursuers) minP=Math.min(minP,dist2(gx,gy,p.x,p.y));
+      const danger=Math.max(0,1-(minP/180));
+      const safe=Math.max(0,1-(dGoal/220));
+      grid[gyi*cols+gxi]=safe - danger*1.3;
+    }
+  }
+  G2.safetyCache={grid,time:now,step,cols,rows};
+  return grid;
+}
+
+function getAIEvaderMove(){
+  const ev=G2.evader;
+  const ai=G2.ai;
+  ai.modeTimer++;
+  ai.chaosPhase+=0.04;
+
+  // Store last pursuer positions for prediction
+  ai.lastPurPos=G2.pursuers.map(p=>({x:p.x,y:p.y,vx:p.vx,vy:p.vy}));
+
+  // Evaluate safety at current pos and ahead
+  const minPurDist=Math.min(...G2.pursuers.map(p=>dist2(ev.x,ev.y,p.x,p.y)));
+  const goalDist=dist2(ev.x,ev.y,G2.goalX,G2.goalY);
+
+  // === AI MODE TRANSITIONS ===
+  // If in immediate danger → dodge
+  if(minPurDist < 90 && ai.mode!=='dodge'){
+    ai.mode='dodge'; ai.modeTimer=0;
+  }
+  // If safe and near goal → dash
+  else if(minPurDist > 130 && goalDist < 200 && ai.mode!=='dash'){
+    ai.mode='dash'; ai.modeTimer=0;
+  }
+  // Feint: randomly decide to fake toward a non-goal direction
+  else if(ai.modeTimer > ai.modeMaxTime){
+    const r=Math.random();
+    if(r<0.25 && ai.mode!=='feint'){
+      ai.mode='feint'; ai.modeTimer=0;
+      ai.feintTarget=rndi(0,4); // random cardinal direction
+    } else if(r<0.55 && ai.mode!=='explore'){
+      ai.mode='explore'; ai.modeTimer=0;
+    } else if(r<0.75 && ai.mode!=='zigzag'){
+      ai.mode='zigzag'; ai.modeTimer=0; ai.zigzagAngle=rnd(-0.8,0.8);
+    }
+  }
+
+  let fx=0, fy=0;
+
+  if(ai.mode==='dash'){
+    // Direct toward goal with slight weaving
+    const dx=G2.goalX-ev.x, dy=G2.goalY-ev.y;
+    const d=Math.sqrt(dx*dx+dy*dy);
+    fx=dx/d + Math.sin(ai.chaosPhase*2.5)*0.2;
+    fy=dy/d + Math.cos(ai.chaosPhase*1.8)*0.2;
+
+  } else if(ai.mode==='dodge'){
+    // Flee closest pursuer + seek safety gradient
+    let fleex=0, fleey=0;
+    for(let p of G2.pursuers){
+      const dx=ev.x-p.x, dy=ev.y-p.y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      const w=Math.max(0,(200-d)/200)**2;
+      fleex+=dx/d*w; fleey+=dy/d*w;
+    }
+    // Blend flee + goal
+    const gx=G2.goalX-ev.x, gy=G2.goalY-ev.y;
+    const gd=Math.sqrt(gx*gx+gy*gy);
+    fx = fleex*1.2 + gx/gd*0.4;
+    fy = fleey*1.2 + gy/gd*0.4;
+
+  } else if(ai.mode==='feint'){
+    // Head in a fake direction then correct
+    const fakeAngles=[0, Math.PI/2, Math.PI, -Math.PI/2];
+    const fa=fakeAngles[ai.feintTarget];
+    if(ai.modeTimer < 25){
+      // Go toward fake
+      fx=Math.cos(fa); fy=Math.sin(fa);
+    } else {
+      // Divert toward goal
+      const gx=G2.goalX-ev.x, gy=G2.goalY-ev.y;
+      const gd=Math.sqrt(gx*gx+gy*gy);
+      fx=gx/gd; fy=gy/gd;
+      if(ai.modeTimer>50){ai.mode='explore'; ai.modeTimer=0;}
+    }
+
+  } else if(ai.mode==='zigzag'){
+    // Zigzag toward goal
+    const gx=G2.goalX-ev.x, gy=G2.goalY-ev.y;
+    const gd=Math.sqrt(gx*gx+gy*gy);
+    const cos=Math.cos(ai.zigzagAngle), sin=Math.sin(ai.zigzagAngle);
+    const rot=Math.sin(ai.chaosPhase*3)>0;
+    fx=cos*(gx/gd)-sin*(gy/gd)*(rot?1:-1);
+    fy=sin*(gx/gd)+cos*(gy/gd)*(rot?1:-1);
+    if(ai.modeTimer>60){ai.zigzagAngle=-ai.zigzagAngle; ai.modeTimer=0;}
+
+  } else { // explore
+    // Navigate toward goal using safety field gradient
+    const gx=G2.goalX-ev.x, gy=G2.goalY-ev.y;
+    const gd=Math.sqrt(gx*gx+gy*gy);
+    fx=gx/gd*0.7; fy=gy/gd*0.7;
+    // Add repulsion from pursuers
+    for(let p of G2.pursuers){
+      const dx=ev.x-p.x, dy=ev.y-p.y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<160){fx+=dx/d*(160-d)/90; fy+=dy/d*(160-d)/90;}
+    }
+    // Add subtle chaos to be unpredictable
+    fx+=Math.sin(ai.chaosPhase)*0.35;
+    fy+=Math.cos(ai.chaosPhase*1.4)*0.35;
+  }
+
+  // Normalize and apply speed
+  const fm=Math.sqrt(fx*fx+fy*fy);
+  if(fm>0.01){
+    return {x:fx/fm*G2.evaderSpeed, y:fy/fm*G2.evaderSpeed, mode:ai.mode};
+  }
+  return {x:0,y:0,mode:ai.mode};
+}
+
+function updateG2(){
+  if(G2.state!=='playing') return;
+  const ev=G2.evader;
+
+  // Move evader
+  let mvx, mvy;
+  if(G2.autoEvade){
+    const mv=getAIEvaderMove();
+    mvx=mv.x; mvy=mv.y;
+    G2.ai.currentMode=mv.mode;
+  } else {
+    const dx=mouseX-ev.x, dy=mouseY-ev.y;
+    const dd=Math.sqrt(dx*dx+dy*dy);
+    if(dd>4){
+      mvx=dx/dd*Math.min(dd*0.18, G2.evaderSpeed);
+      mvy=dy/dd*Math.min(dd*0.18, G2.evaderSpeed);
+    } else {mvx=0;mvy=0;}
+  }
+
+  ev.vx=lerp(ev.vx,mvx,0.35); ev.vy=lerp(ev.vy,mvy,0.35);
+  ev.x+=ev.vx; ev.y+=ev.vy;
+  ev.x=clamp(ev.x,12,W-12); ev.y=clamp(ev.y,12,H-12);
+  ev.angle=Math.atan2(ev.vy,ev.vx);
+  ev.trail.push({x:ev.x,y:ev.y});
+  if(ev.trail.length>35)ev.trail.shift();
+
+  // Move pursuers with role-based strategies
+  for(let p of G2.pursuers){
+    const prevX=p.x, prevY=p.y;
+    let tx=ev.x, ty=ev.y;
+
+    if(p.strategy==='intercept'){
+      // Predict evader position and intercept
+      const spd=G2.pursuerSpeed;
+      const dx=ev.x-p.x, dy=ev.y-p.y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      const timeToEv=d/(spd*1.1);
+      // Predict where evader will be
+      tx=clamp(ev.x+ev.vx*timeToEv*1.5,0,W);
+      ty=clamp(ev.y+ev.vy*timeToEv*1.5,0,H);
+    } else if(p.strategy==='cutoff'){
+      // Try to cut off path to goal
+      const mx=(ev.x+G2.goalX)/2, my=(ev.y+G2.goalY)/2;
+      tx=mx; ty=my;
+    }
+
+    const dx=tx-p.x, dy=ty-p.y;
+    const dd=Math.sqrt(dx*dx+dy*dy);
+    if(dd>1){
+      p.vx=lerp(p.vx,dx/dd*G2.pursuerSpeed,0.25);
+      p.vy=lerp(p.vy,dy/dd*G2.pursuerSpeed,0.25);
+    }
+    p.x+=p.vx; p.y+=p.vy;
+    p.x=clamp(p.x,12,W-12); p.y=clamp(p.y,12,H-12);
+    p.trail.push({x:p.x,y:p.y});
+    if(p.trail.length>25)p.trail.shift();
+  }
+
+  // Check results
+  for(let p of G2.pursuers){
+    if(dist2(ev.x,ev.y,p.x,p.y)<G2.captureR){
+      G2.state='lost'; G2.score.losses++; G2.score.totalRounds++;
+      G2.particles.push(...makeParticles(ev.x,ev.y,'#ff2d55',30,1.3));
+      showOverlay('EVADER CAPTURED','PURSUER INTERCEPTION SUCCESSFUL',
+        `WINS: ${G2.score.wins} | LOSSES: ${G2.score.losses} | WIN RATE: ${G2.score.totalRounds>0?(G2.score.wins/G2.score.totalRounds*100).toFixed(0)+'%':'--'}`,'#ff2d55');
+      return;
+    }
+  }
+  if(dist2(ev.x,ev.y,G2.goalX,G2.goalY)<G2.goalR){
+    G2.state='won'; G2.score.wins++; G2.score.totalRounds++;
+    G2.particles.push(...makeParticles(ev.x,ev.y,'#00ff9f',30,1.4));
+    showOverlay('GOAL REACHED!','EVADER SUCCESSFULLY NAVIGATED TO SAFE ZONE',
+      `WINS: ${G2.score.wins} | LOSSES: ${G2.score.losses} | WIN RATE: ${(G2.score.wins/G2.score.totalRounds*100).toFixed(0)}%`,'#00ff9f');
+  }
+
+  G2.particles=updateParticles(G2.particles);
+  document.getElementById('waveBadge').textContent=`W:${G2.score.wins} L:${G2.score.losses}`;
+  updateSidebarG2();
+}
+
+function drawG2(){
+  ctx.clearRect(0,0,W,H);
+  const t=Date.now()/1000;
+
+  // Safety heatmap
+  if(G2.showSafety){
+    const step=20;
+    for(let gx=0;gx<W;gx+=step){
+      for(let gy=0;gy<H;gy+=step){
+        const dGoal=dist2(gx,gy,G2.goalX,G2.goalY);
+        let minP=Infinity;
+        for(let p of G2.pursuers) minP=Math.min(minP,dist2(gx,gy,p.x,p.y));
+        const danger=Math.max(0,1-(minP/175));
+        const safe=Math.max(0,1-(dGoal/230));
+        const net=safe - danger*1.2;
+        if(net>0.02)      {ctx.fillStyle=`rgba(0,255,159,${Math.min(0.1,net*0.15)})`;ctx.fillRect(gx,gy,step,step);}
+        else if(net<-0.02){ctx.fillStyle=`rgba(255,45,85,${Math.min(0.08,-net*0.12)})`;ctx.fillRect(gx,gy,step,step);}
+      }
+    }
+  }
+
+  // Goal zone
+  const gp=0.5+0.5*Math.sin(t*2.5);
+  const gGrad=ctx.createRadialGradient(G2.goalX,G2.goalY,0,G2.goalX,G2.goalY,G2.goalR*2.2);
+  gGrad.addColorStop(0,'rgba(0,255,159,0.22)'); gGrad.addColorStop(1,'rgba(0,255,159,0)');
+  ctx.beginPath(); ctx.arc(G2.goalX,G2.goalY,G2.goalR*2.2,0,Math.PI*2); ctx.fillStyle=gGrad; ctx.fill();
+  ctx.beginPath(); ctx.arc(G2.goalX,G2.goalY,G2.goalR,0,Math.PI*2);
+  ctx.strokeStyle=`rgba(0,255,159,${0.5+0.4*gp})`; ctx.lineWidth=2; ctx.stroke();
+  ctx.fillStyle='rgba(0,255,159,0.07)'; ctx.fill();
+  // Pulsing rings
+  for(let i=1;i<=3;i++){
+    ctx.beginPath(); ctx.arc(G2.goalX,G2.goalY, G2.goalR+i*12*(1-gp*0.5),0,Math.PI*2);
+    ctx.strokeStyle=`rgba(0,255,159,${(gp*(0.2/i))})`; ctx.lineWidth=1; ctx.stroke();
+  }
+  glowText('SAFE ZONE',G2.goalX,G2.goalY+4,'rgba(0,255,159,0.85)',10);
+
+  // Pursuer trails + bodies
+  for(let p of G2.pursuers){
+    if(p.trail.length>1){
+      for(let i=1;i<p.trail.length;i++){
+        const a=i/p.trail.length;
+        ctx.beginPath();
+        ctx.moveTo(p.trail[i-1].x,p.trail[i-1].y); ctx.lineTo(p.trail[i].x,p.trail[i].y);
+        ctx.strokeStyle=hexA(p.col.replace('#','#'),a*0.35); ctx.lineWidth=a*5; ctx.stroke();
+      }
+    }
+    // Capture radius (dashed)
+    ctx.beginPath(); ctx.arc(p.x,p.y,G2.captureR,0,Math.PI*2);
+    ctx.strokeStyle=hexA(p.col.replace('#','#')+'',0.4); ctx.lineWidth=1.5;
+    ctx.setLineDash([4,5]); ctx.stroke(); ctx.setLineDash([]);
+    // Detection radius (faint)
+    ctx.beginPath(); ctx.arc(p.x,p.y,110,0,Math.PI*2);
+    ctx.strokeStyle=hexA(p.col.replace('#','#')+'',0.06); ctx.lineWidth=1; ctx.stroke();
+    // Glow
+    const pg=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,26);
+    pg.addColorStop(0,hexA(p.col.replace('#','#')+'',0.45)); pg.addColorStop(1,hexA(p.col.replace('#','#')+'',0));
+    ctx.beginPath(); ctx.arc(p.x,p.y,26,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+    // Body
+    ctx.beginPath(); ctx.arc(p.x,p.y,10,0,Math.PI*2); ctx.fillStyle=p.col; ctx.fill();
+    ctx.strokeStyle='rgba(255,200,200,0.6)'; ctx.lineWidth=1.5; ctx.stroke();
+    // Arrow toward evader
+    const a=Math.atan2(G2.evader.y-p.y,G2.evader.x-p.x);
+    ctx.beginPath(); ctx.moveTo(p.x+Math.cos(a)*13,p.y+Math.sin(a)*13);
+    ctx.lineTo(p.x+Math.cos(a)*24,p.y+Math.sin(a)*24);
+    ctx.strokeStyle=hexA(p.col.replace('#','#')+'',0.6); ctx.lineWidth=2; ctx.stroke();
+    // Strategy label
+    ctx.fillStyle=hexA(p.col.replace('#','#')+'',0.5); ctx.font='7px "Share Tech Mono"'; ctx.textAlign='center';
+    ctx.fillText(p.strategy.toUpperCase().slice(0,6),p.x,p.y-16);
+  }
+
+  // Evader trail
+  const ev=G2.evader;
+  if(ev.trail.length>1){
+    for(let i=1;i<ev.trail.length;i++){
+      const a=i/ev.trail.length;
+      ctx.beginPath(); ctx.moveTo(ev.trail[i-1].x,ev.trail[i-1].y); ctx.lineTo(ev.trail[i].x,ev.trail[i].y);
+      ctx.strokeStyle=`rgba(255,215,0,${a*0.45})`; ctx.lineWidth=a*3.5; ctx.stroke();
+    }
+  }
+  // Evader body
+  const evGrad=ctx.createRadialGradient(ev.x,ev.y,0,ev.x,ev.y,22);
+  evGrad.addColorStop(0,'rgba(255,215,0,0.4)'); evGrad.addColorStop(1,'rgba(255,215,0,0)');
+  ctx.beginPath(); ctx.arc(ev.x,ev.y,22,0,Math.PI*2); ctx.fillStyle=evGrad; ctx.fill();
+  ctx.beginPath(); ctx.arc(ev.x,ev.y,10,0,Math.PI*2);
+  ctx.fillStyle='#ffd700'; ctx.fill();
+  ctx.strokeStyle='rgba(255,255,200,0.8)'; ctx.lineWidth=1.8; ctx.stroke();
+  // Velocity arrow
+  const spd=Math.sqrt(ev.vx*ev.vx+ev.vy*ev.vy);
+  if(spd>0.3){
+    const len=30+spd*8;
+    ctx.beginPath(); ctx.moveTo(ev.x,ev.y);
+    ctx.lineTo(ev.x+ev.vx/spd*len,ev.y+ev.vy/spd*len);
+    ctx.strokeStyle='rgba(255,215,0,0.35)'; ctx.lineWidth=1.5; ctx.setLineDash([4,5]); ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  // AI mode indicator on evader
+  if(G2.autoEvade && G2.ai.currentMode){
+    const modeColors={dash:'#00ff9f',dodge:'#ff2d55',feint:'#b44eff',explore:'#ffd700',zigzag:'#00d4ff'};
+    const mc=modeColors[G2.ai.currentMode]||'#ffffff';
+    ctx.fillStyle=mc+'cc'; ctx.font='7px "Share Tech Mono"'; ctx.textAlign='center';
+    ctx.fillText(G2.ai.currentMode.toUpperCase(), ev.x, ev.y-18);
+  }
+
+  // Mouse target (manual mode)
+  if(!G2.autoEvade){
+    const mx=mouseX-ev.x, my=mouseY-ev.y;
+    const md=Math.sqrt(mx*mx+my*my);
+    if(md>25){
+      ctx.beginPath(); ctx.arc(mouseX,mouseY,6,0,Math.PI*2);
+      ctx.strokeStyle='rgba(255,215,0,0.4)'; ctx.lineWidth=1.5; ctx.stroke();
+    }
+  }
+
+  // Closest pursuer lines
+  for(let i=0;i<G2.pursuers.length;i++){
+    const p=G2.pursuers[i];
+    const d=dist2(ev.x,ev.y,p.x,p.y);
+    const danger=Math.max(0,1-d/150);
+    if(danger>0.1){
+      ctx.beginPath(); ctx.setLineDash([3,8]);
+      ctx.moveTo(ev.x,ev.y); ctx.lineTo(p.x,p.y);
+      ctx.strokeStyle=`rgba(255,45,85,${danger*0.25})`; ctx.lineWidth=1; ctx.stroke(); ctx.setLineDash([]);
+    }
+    ctx.fillStyle=hexA(p.col.replace('#','#')+'',0.5);
+    ctx.font='8px "Share Tech Mono"'; ctx.textAlign='left';
+    ctx.fillText(`P${i+1}:${d.toFixed(0)}`, p.x+14, p.y-14);
+  }
+
+  drawParticles(G2.particles);
+
+  // HUD
+  ctx.fillStyle='rgba(0,212,255,0.3)'; ctx.font='8px "Share Tech Mono"'; ctx.textAlign='left';
+  ctx.fillText(`GOAL: ${dist2(ev.x,ev.y,G2.goalX,G2.goalY).toFixed(0)}px | NEAREST THREAT: ${Math.min(...G2.pursuers.map(p=>dist2(ev.x,ev.y,p.x,p.y))).toFixed(0)}px`,12,H-12);
+  ctx.textAlign='center';
+}
+
+function clickG2(x,y){
+  if(G2.autoEvade) return;
+  G2.evader.tx=x; G2.evader.ty=y;
+}
+
+function renderSidebarG2(){
+  document.getElementById('sidebar').innerHTML=`
+    <div class="sb">
+      <div class="sb-label">SCORE</div>
+      <div class="srow"><div class="sl">Wins</div><div class="sv g" id="s2-wins">0</div></div>
+      <div class="srow"><div class="sl">Losses</div><div class="sv r" id="s2-losses">0</div></div>
+      <div class="srow"><div class="sl">Win Rate</div><div class="sv y" id="s2-rate">--</div></div>
+      <div class="srow"><div class="sl">Dist to Goal</div><div class="sv" id="s2-goal">--</div></div>
+      <div class="srow"><div class="sl">AI Mode</div><div class="sv" id="s2-aimode" style="color:var(--gold)">--</div></div>
+    </div>
+    <div class="sb">
+      <div class="sb-label">CONTROLS</div>
+      <button class="btn" onclick="toggleAutoG2()">⚙ AI / PLAYER CONTROL</button>
+      <button class="btn" onclick="G2.showSafety=!G2.showSafety">◉ SAFETY MAP</button>
+      <button class="btn red" onclick="initG2();hideOverlay()">↺ NEW ROUND</button>
+    </div>
+    <div class="sb">
+      <div class="sb-label">EVADER PARAMS</div>
+      <div class="sld-row">
+        <div class="sld-lbl">Evader Speed</div>
+        <input type="range" min="10" max="50" value="${Math.round(G2.evaderSpeed*10)}"
+          oninput="G2.evaderSpeed=this.value/10;document.getElementById('s2-esval').textContent=(this.value/10).toFixed(1)">
+        <div class="sld-val" id="s2-esval">${G2.evaderSpeed.toFixed(1)}</div>
+      </div>
+    </div>
+    <div class="sb">
+      <div class="sb-label">PURSUER PARAMS</div>
+      <div class="sld-row">
+        <div class="sld-lbl">Pursuer Speed</div>
+        <input type="range" min="10" max="45" value="${Math.round(G2.pursuerSpeed*10)}"
+          oninput="G2.pursuerSpeed=this.value/10;document.getElementById('s2-psval').textContent=(this.value/10).toFixed(1)">
+        <div class="sld-val" id="s2-psval">${G2.pursuerSpeed.toFixed(1)}</div>
+      </div>
+      <div class="sld-row">
+        <div class="sld-lbl">Num Pursuers</div>
+        <input type="range" min="1" max="4" value="${G2.levelConfig.numPursuers}" step="1"
+          oninput="G2.levelConfig.numPursuers=+this.value;document.getElementById('s2-npval').textContent=this.value;initG2()">
+        <div class="sld-val" id="s2-npval">${G2.levelConfig.numPursuers}</div>
+      </div>
+    </div>
+    <div class="instrs">
+      <div class="sb-label">HOW TO PLAY</div>
+      <div class="irow"><div class="ikey">AI</div>Autonomous evader uses multi-mode deceptive strategy: feint, dash, dodge, zigzag</div>
+      <div class="irow"><div class="ikey">MOUSE</div>In player mode, move cursor to guide the gold evader</div>
+      <div class="irow"><div class="ikey">WIN</div>Reach green safe zone without being caught</div>
+      <div class="irow"><div class="ikey">ROLES</div>Pursuers have distinct strategies: pursuit, intercept, cutoff</div>
+      <div style="margin-top:12px;font-size:9px;color:var(--muted2);line-height:1.6;font-family:var(--fm)">
+        Based on: Berneburg & Shishika — Reach-Avoid Games, IEEE L-CSS 2025
+      </div>
+    </div>`;
+}
+function updateSidebarG2(){
+  const ev=G2.evader;
+  const total=G2.score.totalRounds;
+  const d=document.getElementById('s2-goal'); if(d) d.textContent=dist2(ev.x,ev.y,G2.goalX,G2.goalY).toFixed(0)+'px';
+  const w=document.getElementById('s2-wins'); if(w) w.textContent=G2.score.wins;
+  const l=document.getElementById('s2-losses'); if(l) l.textContent=G2.score.losses;
+  const r=document.getElementById('s2-rate'); if(r) r.textContent=total>0?(G2.score.wins/total*100).toFixed(0)+'%':'--';
+  const m=document.getElementById('s2-aimode');
+  if(m && G2.autoEvade){
+    const mc={dash:'#00ff9f',dodge:'#ff2d55',feint:'#b44eff',explore:'#ffd700',zigzag:'#00d4ff'};
+    m.textContent=(G2.ai.currentMode||'--').toUpperCase();
+    m.style.color=mc[G2.ai.currentMode]||'var(--cyan)';
+  }
+}
+function toggleAutoG2(){
+  G2.autoEvade=!G2.autoEvade;
+  const mb=document.getElementById('modeBadge');
+  if(G2.autoEvade){mb.textContent='AI EVADER';mb.classList.add('on');}
+  else{mb.textContent='PLAYER';mb.classList.remove('on');}
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+//  GAME 3 — DECEPTION BY MOTION
+// ═══════════════════════════════════════════════════════════════
+const G3 = {
+  agent:{x:0,y:0,vx:0,vy:0,trail:[]},
+  dests:[], trueTarget:-1,
+  probs:[],
+  score:[], rounds:0, totalDeception:0,
+  moving:false, revealed:false, roundOver:false,
+  particles:[],
+  DEST_COLORS:['#ff6b35','#a855f7','#06b6d4','#f59e0b','#10b981'],
+  // Bayesian smoothing memory
+  probMomentum:[],
+  entropyHistory:[],
+};
+
+function initG3(){
+  G3.agent={x:cx,y:cy,vx:0,vy:0,trail:[]};
+  G3.moving=false; G3.revealed=false; G3.roundOver=false;
+  G3.particles=[];
+  G3.dests=[
+    {x:W*0.16,y:H*0.18,label:'A'},
+    {x:W*0.82,y:H*0.18,label:'B'},
+    {x:W*0.82,y:H*0.82,label:'C'},
+    {x:W*0.16,y:H*0.82,label:'D'},
+    {x:W*0.50,y:H*0.12,label:'E'}
+  ];
+  G3.trueTarget=rndi(0,5);
+  G3.probs=new Array(5).fill(0.2);
+  G3.probMomentum=new Array(5).fill(0);
+  G3.entropyHistory=[];
+  document.getElementById('gtitle').textContent='DECEPTION BY MOTION';
+  document.getElementById('waveBadge').textContent=`ROUND ${G3.rounds+1}`;
+  document.getElementById('modeBadge').textContent='MANUAL';
+  document.getElementById('modeBadge').classList.remove('on');
+  renderSidebarG3();
+}
+
+function updateG3(){
+  if(G3.roundOver) return;
+  const ag=G3.agent;
+  const dx=mouseX-ag.x, dy=mouseY-ag.y;
+  const dd=Math.sqrt(dx*dx+dy*dy);
+
+  if(dd>3){
+    G3.moving=true;
+    const speed=3.8;
+    ag.vx=lerp(ag.vx,dx/dd*Math.min(dd,speed),0.25);
+    ag.vy=lerp(ag.vy,dy/dd*Math.min(dd,speed),0.25);
+    ag.x+=ag.vx; ag.y+=ag.vy;
+    ag.x=clamp(ag.x,20,W-20); ag.y=clamp(ag.y,20,H-20);
+    ag.trail.push({x:ag.x,y:ag.y});
+    if(ag.trail.length>45)ag.trail.shift();
+
+    // Update Bayesian probabilities
+    const vx=ag.vx, vy=ag.vy;
+    const vm=Math.sqrt(vx*vx+vy*vy);
+    if(vm>0.3){
+      let weights=[];
+      for(let i=0;i<G3.dests.length;i++){
+        const d=G3.dests[i];
+        const tx=d.x-ag.x, ty=d.y-ag.y;
+        const td=Math.sqrt(tx*tx+ty*ty);
+        if(td<2){weights.push(8); continue;}
+        const alignment=(vx/vm)*(tx/td)+(vy/vm)*(ty/td);
+        // Stronger bias for closer destinations
+        const distBias=Math.max(0,1-td/400);
+        weights.push(Math.exp(5.5*alignment + distBias*1.5));
+      }
+      const sum=weights.reduce((a,b)=>a+b,0);
+      for(let i=0;i<5;i++){
+        const target=weights[i]/sum;
+        G3.probs[i]=lerp(G3.probs[i], target, 0.06);
+        G3.probMomentum[i]=lerp(G3.probMomentum[i], target-G3.probs[i], 0.2);
+      }
+      // Renormalize
+      const ps=G3.probs.reduce((a,b)=>a+b,0);
+      for(let i=0;i<5;i++) G3.probs[i]/=ps;
+
+      // Track entropy
+      const entropy=-G3.probs.reduce((s,p)=>s+(p>0?p*Math.log2(p):0),0);
+      G3.entropyHistory.push(entropy);
+      if(G3.entropyHistory.length>60)G3.entropyHistory.shift();
+    }
+  } else {
+    ag.vx*=0.85; ag.vy*=0.85;
+    G3.moving=false;
+  }
+
+  G3.particles=updateParticles(G3.particles);
+
+  // Check destination reach
+  for(let i=0;i<G3.dests.length;i++){
+    const d=G3.dests[i];
+    if(dist2(ag.x,ag.y,d.x,d.y)<30){
+      G3.roundOver=true; G3.revealed=true;
+      const score=i===G3.trueTarget?Math.round((1-G3.probs[G3.trueTarget])*100):0;
+      G3.totalDeception+=score; G3.rounds++;
+      document.getElementById('waveBadge').textContent=`ROUND ${G3.rounds}`;
+      if(i===G3.trueTarget){
+        G3.particles.push(...makeParticles(ag.x,ag.y,'#00ff9f',30,1.3));
+        showOverlay('MISSION COMPLETE',
+          `OBSERVER CONFIDENCE: ${(G3.probs[G3.trueTarget]*100).toFixed(0)}% — ${score>=70?'MASTERFUL DECEPTION!':score>=40?'GOOD FEINT!':'OBVIOUS APPROACH'}`,
+          `DECEPTION SCORE: ${score}/100 | SESSION AVG: ${G3.rounds>0?(G3.totalDeception/G3.rounds).toFixed(0):0}/100`,'#00ff9f');
+      } else {
+        G3.particles.push(...makeParticles(ag.x,ag.y,'#ff2d55',30,1.3));
+        showOverlay('WRONG DESTINATION',`YOU REACHED ${d.label} BUT TRUE TARGET IS ${G3.dests[G3.trueTarget].label}`,
+          `TRY AGAIN — SESSION AVG: ${G3.rounds>0?(G3.totalDeception/G3.rounds).toFixed(0):0}/100`,'#ff2d55');
+      }
+      break;
+    }
+  }
+  updateSidebarG3();
+}
+
+function drawG3(){
+  ctx.clearRect(0,0,W,H);
+  const t=Date.now()/1000;
+  const ag=G3.agent;
+
+  // Background dest zones
+  for(let i=0;i<G3.dests.length;i++){
+    const d=G3.dests[i];
+    const c=G3.DEST_COLORS[i];
+    const p=G3.probs[i];
+    const grad=ctx.createRadialGradient(d.x,d.y,8,d.x,d.y,90);
+    grad.addColorStop(0,hexA(c,0.08+p*0.05));
+    grad.addColorStop(1,hexA(c,0));
+    ctx.beginPath(); ctx.arc(d.x,d.y,90,0,Math.PI*2); ctx.fillStyle=grad; ctx.fill();
+  }
+
+  // Probability lines from agent to dests
+  for(let i=0;i<G3.dests.length;i++){
+    const d=G3.dests[i];
+    const p=G3.probs[i];
+    if(p>0.05){
+      ctx.beginPath(); ctx.setLineDash([4,9]);
+      ctx.moveTo(ag.x,ag.y); ctx.lineTo(d.x,d.y);
+      ctx.strokeStyle=hexA(G3.DEST_COLORS[i],p*0.2+0.02);
+      ctx.lineWidth=p*4+0.5; ctx.stroke(); ctx.setLineDash([]);
+    }
+  }
+
+  // Agent trail (color by velocity)
+  if(ag.trail.length>1){
+    for(let i=1;i<ag.trail.length;i++){
+      const a=i/ag.trail.length;
+      ctx.beginPath(); ctx.moveTo(ag.trail[i-1].x,ag.trail[i-1].y); ctx.lineTo(ag.trail[i].x,ag.trail[i].y);
+      ctx.strokeStyle=`rgba(200,220,255,${a*0.5})`; ctx.lineWidth=a*3; ctx.stroke();
+    }
+  }
+
+  // True target (only player sees — green dashed ring)
+  if(!G3.revealed){
+    const tt=G3.dests[G3.trueTarget];
+    const blink=0.3+0.25*Math.sin(t*4);
+    ctx.beginPath(); ctx.arc(tt.x,tt.y,42,0,Math.PI*2);
+    ctx.setLineDash([7,5]); ctx.strokeStyle=`rgba(0,255,159,${blink})`; ctx.lineWidth=2; ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='rgba(0,255,159,0.06)'; ctx.fill();
+    ctx.fillStyle=`rgba(0,255,159,${0.6+0.3*Math.sin(t*3)})`; ctx.font='8px "Share Tech Mono"'; ctx.textAlign='center';
+    ctx.fillText('◎ YOUR TARGET',tt.x,tt.y-50);
+  }
+
+  // Destinations
+  for(let i=0;i<G3.dests.length;i++){
+    const d=G3.dests[i], c=G3.DEST_COLORS[i], p=G3.probs[i];
+    const isTrue=i===G3.trueTarget && G3.revealed;
+
+    // Observer belief ring (bigger = more suspected)
+    ctx.beginPath(); ctx.arc(d.x,d.y,26+p*32,0,Math.PI*2);
+    ctx.strokeStyle=hexA(c,p*0.7+0.1); ctx.lineWidth=2; ctx.stroke();
+
+    // Body
+    ctx.beginPath(); ctx.arc(d.x,d.y,22,0,Math.PI*2);
+    ctx.fillStyle=hexA(c,0.15); ctx.fill();
+    ctx.strokeStyle=c+(isTrue?'ff':G3.revealed&&i!==G3.trueTarget?'44':'99'); ctx.lineWidth=2; ctx.stroke();
+
+    // Letter
+    ctx.fillStyle=isTrue?'#00ff9f':c; ctx.font='bold 15px "Orbitron"'; ctx.textAlign='center';
+    ctx.fillText(d.label,d.x,d.y+5);
+
+    // Observer prob %
+    ctx.font='8px "Share Tech Mono"'; ctx.fillStyle=hexA(c,0.7);
+    ctx.fillText((p*100).toFixed(0)+'%',d.x,d.y+38);
+  }
+
+  // Agent
+  const ag2=G3.agent;
+  const agGrad=ctx.createRadialGradient(ag2.x,ag2.y,0,ag2.x,ag2.y,20);
+  agGrad.addColorStop(0,'rgba(255,255,255,0.4)'); agGrad.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.beginPath(); ctx.arc(ag2.x,ag2.y,20,0,Math.PI*2); ctx.fillStyle=agGrad; ctx.fill();
+  ctx.beginPath(); ctx.arc(ag2.x,ag2.y,9,0,Math.PI*2);
+  ctx.fillStyle='#ffffff'; ctx.fill();
+  ctx.strokeStyle='rgba(0,212,255,0.9)'; ctx.lineWidth=2; ctx.stroke();
+  glowText('AGENT',ag2.x,ag2.y-16,'rgba(0,212,255,0.7)',7);
+
+  // Observer indicator bar
+  const topDest=G3.probs.indexOf(Math.max(...G3.probs));
+  const topProb=G3.probs[topDest];
+  const suspectCol=G3.DEST_COLORS[topDest];
+  ctx.fillStyle=hexA(suspectCol,0.7);
+  ctx.font='9px "Share Tech Mono"'; ctx.textAlign='left';
+  ctx.fillText(`👁 OBSERVER → ${G3.dests[topDest].label} (${(topProb*100).toFixed(0)}% confident)`, 12, H-22);
+
+  // Entropy gauge
+  const entropy=-G3.probs.reduce((s,p)=>s+(p>0?p*Math.log2(p):0),0);
+  const maxEntropy=Math.log2(5); // max for 5 uniform
+  const eNorm=entropy/maxEntropy;
+  ctx.fillStyle='rgba(100,160,200,0.4)'; ctx.font='8px "Share Tech Mono"';
+  ctx.fillText(`OBSERVER UNCERTAINTY: ${(eNorm*100).toFixed(0)}%`, 12, H-10);
+  // Mini bar
+  roundRect(12,H-7,120*eNorm,3,2);
+  ctx.fillStyle=eNorm>0.7?'#00ff9f':eNorm>0.4?'#ffd700':'#ff2d55'; ctx.fill();
+  roundRect(12,H-7,120,3,2); ctx.strokeStyle='rgba(0,212,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
+  ctx.textAlign='center';
+
+  drawParticles(G3.particles);
+}
+
+function renderSidebarG3(){
+  const probBars=G3.dests.map((d,i)=>`
+    <div class="pb-row">
+      <div class="pb-lbl" style="color:${G3.DEST_COLORS[i]}">${d.label}</div>
+      <div class="pb-track"><div class="pb-fill" id="pb${i}" style="background:${G3.DEST_COLORS[i]};width:20%"></div></div>
+      <div class="pb-pct" id="pp${i}">20%</div>
+    </div>`).join('');
+  document.getElementById('sidebar').innerHTML=`
+    <div class="sb">
+      <div class="sb-label">OBSERVER INFERENCE</div>
+      <div class="prob-bars">${probBars}</div>
+      <div style="font-family:var(--fm);font-size:8px;color:var(--muted);margin-top:8px">
+        Uncertainty: <span id="s3-entropy" style="color:var(--green)">--</span>
+      </div>
+    </div>
+    <div class="sb">
+      <div class="sb-label">SESSION STATS</div>
+      <div class="srow"><div class="sl">Rounds</div><div class="sv" id="s3-rds">0</div></div>
+      <div class="srow"><div class="sl">Avg Deception</div><div class="sv g" id="s3-avg">--</div></div>
+      <div class="srow"><div class="sl">True Target</div><div class="sv y" id="s3-targ">???</div></div>
+      <div class="prog"><div class="prog-fill" id="s3-avgbar" style="background:var(--green);width:0%"></div></div>
+    </div>
+    <div class="sb">
+      <div class="sb-label">CONTROLS</div>
+      <button class="btn red" onclick="initG3();hideOverlay()">↺ NEW ROUND</button>
+    </div>
+    <div class="instrs">
+      <div class="sb-label">HOW TO PLAY</div>
+      <div class="irow"><div class="ikey">GOAL</div>Move to the <span style="color:#00ff9f">green-ringed destination</span> (only you know which)</div>
+      <div class="irow"><div class="ikey">TRICK</div>Observer uses Bayesian inference on your motion to guess your target</div>
+      <div class="irow"><div class="ikey">TIP</div>Head toward a decoy first, then divert suddenly at the last moment!</div>
+      <div class="irow"><div class="ikey">SCORE</div>100 = observer was totally fooled. 0 = you were obvious</div>
+      <div style="margin-top:12px;font-size:9px;color:var(--muted2);line-height:1.6;font-family:var(--fm)">
+        Based on: Shishika — Movement-Based Signaling for Deception in Multi-Agent Settings
+      </div>
+    </div>`;
+}
+function updateSidebarG3(){
+  for(let i=0;i<5;i++){
+    const pb=document.getElementById(`pb${i}`); if(pb) pb.style.width=(G3.probs[i]*100).toFixed(1)+'%';
+    const pp=document.getElementById(`pp${i}`); if(pp) pp.textContent=(G3.probs[i]*100).toFixed(0)+'%';
+  }
+  const entropy=-G3.probs.reduce((s,p)=>s+(p>0?p*Math.log2(p):0),0);
+  const maxE=Math.log2(5);
+  const eEl=document.getElementById('s3-entropy'); if(eEl) eEl.textContent=(entropy/maxE*100).toFixed(0)+'%';
+  const r=document.getElementById('s3-rds'); if(r) r.textContent=G3.rounds;
+  const avg=document.getElementById('s3-avg'); if(avg) avg.textContent=G3.rounds>0?(G3.totalDeception/G3.rounds).toFixed(0)+'/100':'--';
+  const ab=document.getElementById('s3-avgbar'); if(ab) ab.style.width=G3.rounds>0?(G3.totalDeception/G3.rounds)+'%':'0%';
+  const targ=document.getElementById('s3-targ'); if(targ) targ.textContent=G3.revealed?G3.dests[G3.trueTarget].label:'???';
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+//  GAME 4 — GRAPH COORDINATION
+// ═══════════════════════════════════════════════════════════════
+const G4 = {
+  totalRobots:8,
+  paths:[
+    {name:'α',label:'Fast Lane',  base:1,cong:1.0,robots:3,col:'#00d4ff',desc:'c(n)=1+1.0·n'},
+    {name:'β',label:'Highway',    base:3,cong:0.5,robots:3,col:'#a855f7',desc:'c(n)=3+0.5·n'},
+    {name:'γ',label:'Backroad',   base:5,cong:0.0,robots:2,col:'#ffd700',desc:'c(n)=5 fixed'}
+  ],
+  particles:[],
+  time:0,
+  animRobots:[], // animated robot particles
+};
+
+function pathCost(p){ return p.base + p.cong*p.robots; }
+function totalCost(){ return G4.paths.reduce((s,p)=>s+p.robots*pathCost(p),0).toFixed(1); }
+
+function computeNENumerical(){
+  let assignment=[...G4.paths.map(p=>p.robots)];
+  for(let iter=0;iter<300;iter++){
+    let moved=false;
+    for(let i=0;i<G4.paths.length;i++){
+      if(assignment[i]===0)continue;
+      const ci=G4.paths[i].base+G4.paths[i].cong*(assignment[i]);
+      for(let j=0;j<G4.paths.length;j++){
+        if(i===j) continue;
+        const cj=G4.paths[j].base+G4.paths[j].cong*(assignment[j]+1);
+        if(cj<ci-0.001){
+          assignment[i]--; assignment[j]++;
+          moved=true; break;
+        }
+      }
+      if(moved)break;
+    }
+    if(!moved)break;
+  }
+  return assignment;
+}
+
+function computeSocialOptimum(){
+  let best=null, bestCost=Infinity;
+  const total=G4.totalRobots;
+  for(let a=0;a<=total;a++) for(let b=0;b<=total-a;b++){
+    const c=total-a-b;
+    const cost=a*(G4.paths[0].base+G4.paths[0].cong*a)+b*(G4.paths[1].base+G4.paths[1].cong*b)+c*(G4.paths[2].base+G4.paths[2].cong*c);
+    if(cost<bestCost){bestCost=cost;best=[a,b,c];}
+  }
+  return best;
+}
+
+function initG4(){
+  G4.paths[0].robots=3; G4.paths[1].robots=3; G4.paths[2].robots=2;
+  G4.time=0; G4.animRobots=[];
+  document.getElementById('gtitle').textContent='GRAPH COORDINATION';
+  document.getElementById('waveBadge').textContent='CONGESTION GAME';
+  document.getElementById('modeBadge').textContent='INTERACTIVE';
+  document.getElementById('modeBadge').classList.add('on');
+  renderSidebarG4();
+}
+
+function updateG4(){ G4.time++; }
+
+function drawG4(){
+  ctx.clearRect(0,0,W,H);
+  const t=Date.now()/1000;
+  const ne=computeNENumerical();
+  const opt=computeSocialOptimum();
+
+  // Node positions
+  const srcX=W*0.12, srcY=cy;
+  const dstX=W*0.88, dstY=cy;
+  const spacing=H*0.32;
+  const nodePositions=[
+    {x:srcX+W*0.25, y:cy-spacing, col:G4.paths[0].col},
+    {x:srcX+W*0.25, y:cy,         col:G4.paths[1].col},
+    {x:srcX+W*0.25, y:cy+spacing, col:G4.paths[2].col},
+  ];
+
+  // Background glow for source/dest
+  for(const [nx,ny] of [[srcX,srcY],[dstX,dstY]]){
+    const gg=ctx.createRadialGradient(nx,ny,0,nx,ny,55);
+    gg.addColorStop(0,'rgba(0,212,255,0.12)'); gg.addColorStop(1,'rgba(0,212,255,0)');
+    ctx.beginPath(); ctx.arc(nx,ny,55,0,Math.PI*2); ctx.fillStyle=gg; ctx.fill();
+  }
+
+  for(let i=0;i<G4.paths.length;i++){
+    const p=G4.paths[i];
+    const mid=nodePositions[i];
+    const pCost=pathCost(p);
+    const neCost=G4.paths[i].base+G4.paths[i].cong*ne[i];
+    const isPlayerNe=p.robots===ne[i];
+    const isPlayerOpt=p.robots===opt[i];
+
+    // Path lines (src→mid→dst)
+    ctx.beginPath(); ctx.moveTo(srcX,srcY); ctx.bezierCurveTo(
+      srcX+W*0.12, srcY, mid.x-W*0.06, mid.y, mid.x, mid.y);
+    ctx.strokeStyle=hexA(p.col,0.3+p.robots/10*0.5); ctx.lineWidth=2+p.robots*1.2;
+    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(mid.x,mid.y); ctx.bezierCurveTo(
+      mid.x+W*0.06, mid.y, dstX-W*0.12, dstY, dstX, dstY);
+    ctx.strokeStyle=hexA(p.col,0.3+p.robots/10*0.5); ctx.lineWidth=2+p.robots*1.2;
+    ctx.stroke();
+
+    // Animated robot flow along path
+    for(let r=0;r<p.robots;r++){
+      const phase=(t*0.6 + r/p.robots*1.0 + i*0.3)%1;
+      const eased=easeOut(phase);
+      // Bezier path interpolation (approximate)
+      let rx,ry;
+      if(eased<0.5){
+        const tt=eased*2;
+        const t2=tt*tt, t3=tt*tt*tt;
+        rx=lerp(srcX, lerp(srcX+W*0.12,lerp(mid.x-W*0.06,mid.x,tt),tt), tt);
+        ry=lerp(srcY, lerp(srcY,lerp(mid.y,mid.y,tt),tt), tt);
+      } else {
+        const tt=(eased-0.5)*2;
+        rx=lerp(mid.x, lerp(mid.x+W*0.06,lerp(dstX-W*0.12,dstX,tt),tt), tt);
+        ry=lerp(mid.y, lerp(mid.y,lerp(dstY,dstY,tt),tt), tt);
+      }
+      ctx.beginPath(); ctx.arc(rx,ry,4,0,Math.PI*2);
+      ctx.fillStyle=hexA(p.col,0.8); ctx.fill();
+      ctx.beginPath(); ctx.arc(rx,ry,7,0,Math.PI*2);
+      ctx.strokeStyle=hexA(p.col,0.2); ctx.lineWidth=1; ctx.stroke();
+    }
+
+    // Mid node
+    ctx.beginPath(); ctx.arc(mid.x,mid.y,18,0,Math.PI*2);
+    const ng=ctx.createRadialGradient(mid.x,mid.y,0,mid.x,mid.y,18);
+    ng.addColorStop(0,hexA(p.col,0.35)); ng.addColorStop(1,hexA(p.col,0.08));
+    ctx.fillStyle=ng; ctx.fill();
+    ctx.strokeStyle=p.col+(isPlayerOpt?'ff':isPlayerNe?'aa':'55'); ctx.lineWidth=2; ctx.stroke();
+
+    // Path name
+    ctx.fillStyle=p.col; ctx.font='bold 13px "Orbitron"'; ctx.textAlign='center';
+    ctx.fillText(p.name,mid.x,mid.y+4);
+    // Cost
+    ctx.font='9px "Share Tech Mono"'; ctx.fillStyle=hexA(p.col,0.8);
+    ctx.fillText(`n=${p.robots} c=${pCost.toFixed(1)}`,mid.x,mid.y+32);
+    ctx.fillStyle='rgba(255,255,255,0.25)'; ctx.font='8px "Share Tech Mono"';
+    ctx.fillText(p.desc,mid.x,mid.y-26);
+
+    // NE/OPT indicators
+    if(isPlayerNe && isPlayerOpt){
+      ctx.fillStyle='rgba(0,255,159,0.7)'; ctx.font='7px "Share Tech Mono"';
+      ctx.fillText('NE + OPT ✓',mid.x,mid.y+46);
+    } else if(isPlayerNe){
+      ctx.fillStyle='rgba(0,212,255,0.6)'; ctx.font='7px "Share Tech Mono"';
+      ctx.fillText('NE ✓',mid.x,mid.y+46);
+    } else if(isPlayerOpt){
+      ctx.fillStyle='rgba(0,255,159,0.6)'; ctx.font='7px "Share Tech Mono"';
+      ctx.fillText('OPT ✓',mid.x,mid.y+46);
+    }
+  }
+
+  // Source node
+  drawGraphNode(srcX,srcY,'S','#00d4ff');
+  // Destination node
+  drawGraphNode(dstX,dstY,'D','#00ff9f');
+
+  // Stats panel
+  const ne_cost=ne.reduce((s,n,j)=>s+n*(G4.paths[j].base+G4.paths[j].cong*n),0);
+  const opt_cost=opt.reduce((s,n,j)=>s+n*(G4.paths[j].base+G4.paths[j].cong*n),0);
+  const poa=opt_cost>0?ne_cost/opt_cost:1;
+  const cur_cost=parseFloat(totalCost());
+
+  const panelX=cx-220, panelY=22, panelW=440, panelH=38;
+  roundRect(panelX,panelY,panelW,panelH,4);
+  ctx.fillStyle='rgba(8,20,34,0.85)'; ctx.fill();
+  ctx.strokeStyle='rgba(0,212,255,0.1)'; ctx.lineWidth=1; ctx.stroke();
+
+  ctx.font='8px "Share Tech Mono"'; ctx.textAlign='left';
+  ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.fillText('CURRENT COST:', panelX+12,panelY+14);
+  ctx.fillStyle=cur_cost<=opt_cost+0.1?'#00ff9f':'#ffd700'; ctx.font='bold 14px "Share Tech Mono"';
+  ctx.fillText(cur_cost.toFixed(1),panelX+120,panelY+14);
+  ctx.font='8px "Share Tech Mono"';
+  ctx.fillStyle='rgba(0,255,159,0.6)'; ctx.fillText(`OPTIMAL:${opt_cost.toFixed(1)}`,panelX+12,panelY+28);
+  ctx.fillStyle='rgba(0,212,255,0.6)'; ctx.fillText(`NE:${ne_cost.toFixed(1)}`,panelX+130,panelY+28);
+  ctx.fillStyle='rgba(255,107,53,0.7)'; ctx.fillText(`PoA:${poa.toFixed(2)}×`,panelX+230,panelY+28);
+  ctx.fillStyle='rgba(100,160,200,0.5)'; ctx.fillText(`TOTAL ROBOTS:${G4.totalRobots}`,panelX+320,panelY+28);
+  ctx.textAlign='center';
+
+  updateSidebarG4();
+}
+
+function drawGraphNode(x,y,label,col){
+  ctx.beginPath(); ctx.arc(x,y,20,0,Math.PI*2);
+  const g=ctx.createRadialGradient(x,y,0,x,y,20);
+  g.addColorStop(0,hexA(col,0.35)); g.addColorStop(1,hexA(col,0.08));
+  ctx.fillStyle=g; ctx.fill();
+  ctx.strokeStyle=col; ctx.lineWidth=2; ctx.stroke();
+  ctx.fillStyle=col; ctx.font='bold 12px "Orbitron"'; ctx.textAlign='center'; ctx.fillText(label,x,y+4);
+}
+
+function renderSidebarG4(){
+  const ne=computeNENumerical(), opt=computeSocialOptimum();
+  const pathRows=G4.paths.map((p,i)=>`
+    <div class="path-row">
+      <div class="pn" style="color:${p.col}">${p.name}</div>
+      <div class="pcost" id="g4-cost${i}">${pathCost(p).toFixed(1)}</div>
+      <div class="pctrl">
+        <button class="pbtn" onclick="adjustRobots(${i},-1)">−</button>
+        <div class="pcount" id="g4-n${i}">${p.robots}</div>
+        <button class="pbtn" onclick="adjustRobots(${i},+1)">+</button>
+      </div>
+    </div>`).join('');
+
+  const ne_cost=ne.reduce((s,n,j)=>s+n*(G4.paths[j].base+G4.paths[j].cong*n),0);
+  const opt_cost=opt.reduce((s,n,j)=>s+n*(G4.paths[j].base+G4.paths[j].cong*n),0);
+
+  document.getElementById('sidebar').innerHTML=`
+    <div class="sb">
+      <div class="sb-label">ROBOT DISTRIBUTION</div>
+      ${pathRows}
+      <div style="font-family:var(--fm);font-size:8px;color:var(--muted);margin-top:4px">
+        Total: <span id="g4-total" style="color:var(--cyan)">${G4.paths.reduce((s,p)=>s+p.robots,0)}</span> / ${G4.totalRobots}
+      </div>
+    </div>
+    <div class="sb">
+      <div class="sb-label">COST ANALYSIS</div>
+      <div class="srow"><div class="sl">Your Cost</div><div class="sv y" id="g4-mycost">${totalCost()}</div></div>
+      <div class="srow"><div class="sl">Nash Eq</div><div class="sv" style="color:var(--cyan)">${ne_cost.toFixed(1)}</div></div>
+      <div class="srow"><div class="sl">Social Opt</div><div class="sv g">${opt_cost.toFixed(1)}</div></div>
+      <div class="srow"><div class="sl">Price of Anarchy</div><div class="sv y">${(opt_cost>0?ne_cost/opt_cost:1).toFixed(2)}×</div></div>
+    </div>
+    <div class="sb">
+      <div class="sb-label">EQUILIBRIA TARGETS</div>
+      ${G4.paths.map((p,i)=>`
+        <div class="srow">
+          <div class="sl" style="color:${p.col}">${p.name} (${p.label})</div>
+          <div style="font-family:var(--fm);font-size:11px;color:var(--muted)">
+            NE:<span style="color:var(--cyan)">${ne[i]}</span> OPT:<span style="color:var(--green)">${opt[i]}</span>
+          </div>
+        </div>`).join('')}
+    </div>
+    <div class="sb">
+      <div class="sb-label">ACTIONS</div>
+      <button class="btn" onclick="setNashEq()">◈ SET NASH EQUILIBRIUM</button>
+      <button class="btn green" onclick="setSocialOpt()">★ SET SOCIAL OPTIMUM</button>
+      <button class="btn red" onclick="initG4()">↺ RESET</button>
+    </div>
+    <div class="instrs">
+      <div class="sb-label">HOW IT WORKS</div>
+      <div class="irow"><div class="ikey">+/−</div>Add/remove robots from each path; cost updates in real-time</div>
+      <div class="irow"><div class="ikey">c(n)</div>Each path: cost = base + congestion × n robots</div>
+      <div class="irow"><div class="ikey">NE</div>Nash Eq: no robot benefits from switching unilaterally</div>
+      <div class="irow"><div class="ikey">PoA</div>Price of Anarchy = NE cost ÷ socially optimal cost</div>
+      <div style="margin-top:12px;font-size:9px;color:var(--muted2);line-height:1.6;font-family:var(--fm)">
+        Shishika et al. — Team Coordination on Graphs with State-Dependent Edge Costs (IROS 2023 Best Paper Nominee)
+      </div>
+    </div>`;
+}
+
+function updateSidebarG4(){
+  for(let i=0;i<G4.paths.length;i++){
+    const c=document.getElementById(`g4-cost${i}`); if(c) c.textContent=pathCost(G4.paths[i]).toFixed(1);
+    const n=document.getElementById(`g4-n${i}`); if(n) n.textContent=G4.paths[i].robots;
+  }
+  const t=document.getElementById('g4-total'); if(t) t.textContent=G4.paths.reduce((s,p)=>s+p.robots,0);
+  const mc=document.getElementById('g4-mycost'); if(mc) mc.textContent=totalCost();
+}
+function adjustRobots(idx,delta){
+  const total=G4.paths.reduce((s,p)=>s+p.robots,0);
+  if(delta>0 && total>=G4.totalRobots) return;
+  if(delta<0 && G4.paths[idx].robots<=0) return;
+  G4.paths[idx].robots+=delta;
+  G4.particles.push(...makeParticles(W/2,cy,G4.paths[idx].col,8,0.8));
+}
+function setNashEq(){ const ne=computeNENumerical(); for(let i=0;i<G4.paths.length;i++) G4.paths[i].robots=ne[i]; flashMsg('◈ NASH EQUILIBRIUM SET','#00d4ff'); }
+function setSocialOpt(){ const opt=computeSocialOptimum(); for(let i=0;i<G4.paths.length;i++) G4.paths[i].robots=opt[i]; flashMsg('★ SOCIAL OPTIMUM SET','#00ff9f'); }
+
+
+// ═══════════════════════════════════════════════════════════════
+//  GAME RUNNER
+// ═══════════════════════════════════════════════════════════════
+function handleClick(x,y){
+  switch(activeGame){
+    case 0: clickG1(x,y); break;
+    case 1: clickG2(x,y); break;
+  }
+}
+function initActiveGame(){
+  hideOverlay();
+  switch(activeGame){
+    case 0: initG1(); break;
+    case 1: initG2(); break;
+    case 2: initG3(); break;
+    case 3: initG4(); break;
+  }
+}
+function restartCurrent(){ hideOverlay(); initActiveGame(); }
+function switchGame(idx){
+  activeGame=idx;
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  initActiveGame();
+}
+
+let lastT=0, frameCount=0, fps=60, fpsTimer=0;
+function loop(t){
+  raf=requestAnimationFrame(loop);
+  frameCount++;
+  if(t-fpsTimer>=1000){ fps=frameCount; frameCount=0; fpsTimer=t; }
+  switch(activeGame){
+    case 0: updateG1(); drawG1(); break;
+    case 1: updateG2(); drawG2(); break;
+    case 2: updateG3(); drawG3(); break;
+    case 3: updateG4(); drawG4(); break;
+  }
+  if(t-lastT>1000){
+    lastT=t;
+    document.getElementById('hstat').textContent=new Date().toLocaleTimeString('en-US',{hour12:false})+' | '+fps+'FPS';
+  }
+}
+
+window.addEventListener('resize', resize);
+resize();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

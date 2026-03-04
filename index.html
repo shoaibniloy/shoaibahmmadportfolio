@@ -402,6 +402,74 @@ My research experience includes contributing to <span style="color: #ff0000d2;">
       </div>
     </div>
     <div class="row">
+
+      <!-- CRADL Game Theory Interactive Lab -->
+      <div class="col-md-4 d-flex ftco-animate">
+        <div class="blog-entry">
+          <div class="project-image" style="
+            background: linear-gradient(135deg, #020912 0%, #0a1829 50%, #0e2038 100%);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #1a3a58;
+          ">
+            <!-- Animated grid -->
+            <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.04) 1px,transparent 1px);background-size:24px 24px;animation:cradlGridShift 8s linear infinite;"></div>
+            <!-- Radar rings -->
+            <div style="position:absolute;top:50%;left:50%;width:140px;height:140px;margin:-70px 0 0 -70px;border-radius:50%;border:1px solid rgba(0,212,255,0.2);"></div>
+            <div style="position:absolute;top:50%;left:50%;width:100px;height:100px;margin:-50px 0 0 -50px;border-radius:50%;border:1px solid rgba(0,212,255,0.12);"></div>
+            <!-- Radar sweep -->
+            <div style="position:absolute;top:50%;left:50%;width:0;height:0;transform-origin:0 0;animation:cradlSweep 3s linear infinite;">
+              <div style="position:absolute;width:70px;height:1px;background:linear-gradient(90deg,rgba(0,212,255,0.9),transparent);transform-origin:0 50%;"></div>
+            </div>
+            <!-- Central asset -->
+            <div style="position:absolute;top:50%;left:50%;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:#00ff9f;box-shadow:0 0 14px #00ff9f,0 0 28px rgba(0,255,159,0.4);animation:cradlPulse 1.8s ease-in-out infinite;"></div>
+            <!-- Intruder dots -->
+            <div style="position:absolute;top:22%;left:18%;width:7px;height:7px;border-radius:50%;background:#ff2d55;box-shadow:0 0 8px #ff2d55;animation:cradlBlink 1.2s infinite 0.1s"></div>
+            <div style="position:absolute;top:68%;left:75%;width:7px;height:7px;border-radius:50%;background:#ff6b35;box-shadow:0 0 8px #ff6b35;animation:cradlBlink 1.4s infinite 0.5s"></div>
+            <div style="position:absolute;top:80%;left:25%;width:6px;height:6px;border-radius:50%;background:#ff2d55;box-shadow:0 0 6px #ff2d55;animation:cradlBlink 1s infinite 0.9s"></div>
+            <!-- Label -->
+            <div style="position:absolute;bottom:12px;left:0;right:0;text-align:center;font-family:'Orbitron','Share Tech Mono',monospace;font-size:11px;font-weight:900;letter-spacing:5px;color:#00d4ff;text-shadow:0 0 16px rgba(0,212,255,0.8);">CRADL <span style="color:#ffd700">|</span> GAME THEORY</div>
+            <!-- Badge -->
+            <div style="position:absolute;top:10px;right:10px;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.4);color:#00d4ff;font-family:monospace;font-size:8px;letter-spacing:2px;padding:3px 7px;">INTERACTIVE</div>
+            <div class="play-button">▶</div>
+          </div>
+          <div class="text mt-3 d-block">
+            <h3 class="heading">
+              <a href="cradl_games_v2.html" style="color: red;">CRADL Game Theory Interactive Lab</a>
+            </h3>
+            <p class="description">4 interactive game-theoretic simulations: Perimeter Defense, Reach-Avoid, Deception by Motion &amp; Graph Coordination — built for George Mason University's CRADL research lab.</p>
+            <div class="tags">
+              <span class="tag">Game Theory</span>
+              <span class="tag">Multi-Agent</span>
+              <span class="tag">AI Strategy</span>
+              <span class="tag">Canvas</span>
+            </div>
+            <div class="buttons">
+              <a href="cradl_games_v2.html" class="btn btn-demo">Demo</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style>
+        @keyframes cradlGridShift {
+          from { background-position: 0 0; }
+          to   { background-position: 24px 24px; }
+        }
+        @keyframes cradlSweep {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+        @keyframes cradlPulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50%       { opacity: 0.5; transform: scale(0.75); }
+        }
+        @keyframes cradlBlink {
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0.2; }
+        }
+      </style>
+
 	<!-- Project 8 -->
       <div class="col-md-4 d-flex ftco-animate">
         <div class="blog-entry">
