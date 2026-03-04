@@ -451,6 +451,63 @@ My research experience includes contributing to <span style="color: #ff0000d2;">
         </div>
       </div>
 
+      <!-- Nash Robotics Arena -->
+      <div class="col-md-4 d-flex ftco-animate">
+        <div class="blog-entry">
+          <div class="project-image" style="
+            background: linear-gradient(135deg, #020912 0%, #0a1829 50%, #0e2038 100%);
+            position: relative; overflow: hidden; border: 1px solid #1a3a58;">
+            <!-- Grid -->
+            <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(167,139,250,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(167,139,250,.04) 1px,transparent 1px);background-size:28px 28px;animation:nashGrid 10s linear infinite;"></div>
+            <!-- Waypoints -->
+            <div style="position:absolute;top:50%;left:22%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;border:1.5px solid #22d3ee;box-shadow:0 0 10px rgba(34,211,238,0.5);"></div>
+            <div style="position:absolute;top:22%;left:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;border:1.5px solid #22d3ee;box-shadow:0 0 10px rgba(34,211,238,0.5);"></div>
+            <div style="position:absolute;top:50%;left:78%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;border:1.5px solid #22d3ee;box-shadow:0 0 10px rgba(34,211,238,0.5);"></div>
+            <!-- NE glow ring -->
+            <div style="position:absolute;top:50%;left:78%;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;background:rgba(0,255,159,0.12);border:1.5px solid rgba(0,255,159,0.5);animation:nashNEPulse 2s ease-in-out infinite;"></div>
+            <div style="position:absolute;top:50%;left:78%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;background:#00ff9f;box-shadow:0 0 8px #00ff9f;"></div>
+            <!-- Robots -->
+            <div style="position:absolute;top:50%;left:22%;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;border-radius:50%;background:#22d3ee;box-shadow:0 0 10px rgba(34,211,238,0.7);animation:nashR1 4s ease-in-out infinite;"></div>
+            <div style="position:absolute;top:50%;left:78%;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;border-radius:50%;background:#fb923c;box-shadow:0 0 10px rgba(251,146,60,0.7);animation:nashR2 3.5s ease-in-out infinite 0.4s;"></div>
+            <!-- NE star label -->
+            <div style="position:absolute;top:34%;left:75%;font-size:9px;color:rgba(0,255,159,0.85);font-family:monospace;animation:nashNEPulse 2s ease-in-out infinite;">★</div>
+            <!-- Label -->
+            <div style="position:absolute;bottom:12px;left:0;right:0;text-align:center;font-family:'Orbitron','Share Tech Mono',monospace;font-size:10px;font-weight:900;letter-spacing:4px;color:#a78bfa;text-shadow:0 0 14px rgba(167,139,250,0.8);">NASH <span style="color:#ffd700">|</span> ARENA</div>
+            <!-- Badge -->
+            <div style="position:absolute;top:10px;right:10px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.4);color:#a78bfa;font-family:monospace;font-size:8px;letter-spacing:2px;padding:3px 7px;">GAME THEORY</div>
+            <div class="play-button">▶</div>
+          </div>
+          <div class="text mt-3 d-block">
+            <h3 class="heading">
+              <a href="nash_arena_v3.html" style="color: red;">Nash Robotics Arena</a>
+            </h3>
+            <p class="description">5 interactive Nash Equilibrium simulations with live best-response dynamics, payoff matrix editor, mixed strategy solver &amp; real-time convergence tracking.</p>
+            <div class="tags">
+              <span class="tag">Nash Equilibrium</span>
+              <span class="tag">Game Theory</span>
+              <span class="tag">Multi-Agent</span>
+              <span class="tag">Interactive</span>
+            </div>
+            <div class="buttons">
+              <a href="nash_arena_v3.html" class="btn btn-demo">Demo</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style>
+        @keyframes nashGrid { to { background-position: 28px 28px; } }
+        @keyframes nashNEPulse { 0%,100%{opacity:.6} 50%{opacity:1} }
+        @keyframes nashR1 {
+          0%,100%{transform:translate(-6.5px,-6.5px)}
+          50%{transform:translate(calc(-6.5px + 120px), calc(-6.5px - 30px))}
+        }
+        @keyframes nashR2 {
+          0%,100%{transform:translate(-6.5px,-6.5px)}
+          50%{transform:translate(calc(-6.5px - 22px), calc(-6.5px - 30px))}
+        }
+      </style>
+
       <style>
         @keyframes cradlGridShift {
           from { background-position: 0 0; }
